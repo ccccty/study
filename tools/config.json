@@ -1,0 +1,38 @@
+{
+  "_comment": "每日岗位检索配置。改这里就能换城市/方向，不用动代码。",
+
+  "cities": ["上海", "南京", "成都", "苏州"],
+
+  "domains": [
+    {
+      "name": "具身智能 / 机器人感知",
+      "cat": "embodied",
+      "keywords": ["具身智能", "机器人算法", "SLAM", "多传感器融合", "视觉感知算法", "运动规划"]
+    },
+    {
+      "name": "自动驾驶 / 车载感知",
+      "cat": "fusion",
+      "keywords": ["自动驾驶感知", "激光雷达算法", "毫米波雷达", "BEV感知", "传感器融合"]
+    },
+    {
+      "name": "嵌入式 / 底层驱动",
+      "cat": "mcu",
+      "keywords": ["嵌入式软件", "MCU开发", "驱动开发", "电机控制", "BSP"]
+    },
+    {
+      "name": "量化",
+      "cat": "quant",
+      "keywords": ["量化研究员", "量化开发", "算法交易", "因子研究"]
+    }
+  ],
+
+  "minMentions": 3,
+  "maxNewPerDay": 8,
+  "maxPagesPerKeyword": 3,
+
+  "_notes": {
+    "minMentions": "一个概念至少被几个不同岗位提到才做成卡片，防止噪音进题库",
+    "maxNewPerDay": "每天最多新增几张，宁少勿滥",
+    "maxPagesPerKeyword": "每个关键词翻几页列表，控制抓取量与风控风险"
+  }
+}

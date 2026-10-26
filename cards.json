@@ -1,7 +1,7 @@
 {
   "version": 1,
   "updated": "2026-10-26",
-  "note": "由 pipeline/merge_cards.py 自动维护，勿手改结构。cat 必须取自 index.html 中 CATS 的键：sens radar fusion est mcu bus deploy auto ml embodied quant ros2。八字段：cat term en one jd pts[] use trap added",
+  "note": "由 tools/merge_cards.py 自动维护，勿手改结构。cat 必须取自 index.html 中 CATS 的键：sens radar fusion est mcu bus deploy auto ml embodied quant ros2。八字段：cat term en one jd pts[] use trap added",
   "cards": [
     {
       "cat": "ros2",

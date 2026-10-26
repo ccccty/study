@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+cards.json.bak
+_s_*.png
+data/

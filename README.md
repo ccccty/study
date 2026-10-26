@@ -66,18 +66,31 @@
 
 ```
 index.html            单页应用（内置卡 + 全部逻辑）
-cards.json            增量卡数据，流水线每日写入
+cards.json            增量卡数据，tools/merge_cards.py 每日写入
 manifest.webmanifest  PWA 清单
 sw.js                 Service Worker：断网可用，cards.json 永不缓存
 icons/                应用图标（含 maskable 与 apple-touch-icon）
+tools/                每日流水线（抓取配置、写卡规范、合并脚本、测试）
+candidates/           每天的候选卡（YYYY-MM-DD.json）
 ```
 
 ---
 
-## 相关的本地流水线
+## 每日流水线也在本仓库
 
-抓取与写卡逻辑不在本仓库，在本地 `pipeline/`：
+**这个仓库是唯一的数据源和唯一的产出目标。** 抓取、抽词、写卡、合并的脚本都在 `tools/`，候选卡在 `candidates/`：
 
-- `config.json`：目标城市、岗位方向、检索关键词
-- `merge_cards.py`：把 `candidates/*.json` 合并进本仓库的 `cards.json`（幂等，按术语去重）
-- `jd_to_cards.md`：八字段写卡规范，含 `jd` 的正反例
+- `tools/config.json`：目标城市、岗位方向、检索关键词
+- `tools/jd_to_cards.md`：八字段写卡规范，含 `jd` 的正反例
+- `tools/merge_cards.py`：把 `candidates/*.json` 合并进本仓库的 `cards.json`（幂等，按术语去重）
+- `tools/tests/`：持久化与布局的浏览器测试
+
+细节见 [`tools/README.md`](tools/README.md)。
+
+每天只需要一次提交：
+
+```bash
+python tools/merge_cards.py candidates/2026-10-27.json --dry-run
+python tools/merge_cards.py candidates/2026-10-27.json
+git add cards.json candidates/ && git commit -m "cards: 2026-10-27 新增 5 张" && git push
+```
