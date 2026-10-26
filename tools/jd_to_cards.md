@@ -110,7 +110,7 @@ JD 里的概念密度并不均匀：
 
 ## 六、输出格式
 
-存到 `pipeline/candidates/YYYY-MM-DD.json`：
+存到 `candidates/YYYY-MM-DD.json`（本仓库根目录下）：
 
 ```json
 {
@@ -125,7 +125,7 @@ JD 里的概念密度并不均匀：
 然后合并：
 
 ```bash
-python pipeline/merge_cards.py pipeline/candidates/2026-10-27.json --max 8
+python tools/merge_cards.py candidates/2026-10-27.json --max=8  # 在仓库根执行
 ```
 
 先加 `--dry-run` 看会加什么、会跳过什么，确认没问题再去掉。
