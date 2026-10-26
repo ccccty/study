@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f6fa">
+<title>工程概念 · 每日一推</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="概念卡">
+<meta name="description" content="面向感知融合与机器人方向：每天推几个工程概念，间隔重复记牢。">
+<style>
+:root{
+  --bg:#f5f6fa; --card:#ffffff; --ink:#131a2a; --ink2:#4b5568; --ink3:#8b93a5;
+  --line:#e4e7ef; --accent:#1b4b8f; --accent-2:#2563a8; --soft:#eef2fa;
+  --teal:#0d9488; --warn:#c2760a; --danger:#c0392b; --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding-bottom:56px;
+  font-variant-numeric:tabular-nums;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+/* ---------- header ---------- */
+header.top{position:sticky;top:0;z-index:30;background:rgba(245,246,250,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top__bar{height:3px;background:var(--line)}
+.top__fill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--teal));transition:width .35s ease}
+.top__in{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 10px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:.3px}
+.mark{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#3b7dd8);position:relative;flex:none}
+.mark::after{content:"";position:absolute;inset:6px;border-radius:50%;border:1.5px solid #fff;opacity:.9}
+.mark::before{content:"";position:absolute;left:60%;top:50%;width:9px;height:1.5px;background:#fff;transform-origin:0 50%;transform:rotate(-38deg)}
+.top__meta{display:flex;align-items:center;gap:14px;font-size:12.5px;color:var(--ink3)}
+.top__meta b{color:var(--accent);font-weight:700}
+.streak{display:inline-flex;align-items:center;gap:4px}
+.streak.on{color:#c2760a}
+
+/* ---------- tabs ---------- */
+nav.tabs{display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:12px;margin:14px 0 18px}
+nav.tabs button{flex:1;padding:8px 6px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--ink2);transition:.18s}
+nav.tabs button.on{background:#fff;color:var(--accent);box-shadow:0 1px 3px rgba(20,30,60,.1)}
+
+/* ---------- card ---------- */
+.card{
+  background:var(--card);border-radius:var(--radius);padding:24px 22px 20px;
+  box-shadow:0 1px 2px rgba(20,30,60,.05),0 8px 24px rgba(20,30,60,.055);
+  border:1px solid rgba(228,231,239,.9);cursor:pointer;
+  animation:fadeUp .3s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card__top{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.chip{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--accent);letter-spacing:.2px}
+.chip--new{background:#fdf4e3;color:var(--warn)}
+.chip--jd{background:#eaf6f3;color:#0b7268}
+.term{font-size:25px;font-weight:700;line-height:1.35;letter-spacing:-.2px;word-break:break-word}
+.term .en{display:block;font-size:12px;font-weight:500;color:var(--ink3);letter-spacing:.6px;text-transform:uppercase;margin-top:6px}
+.hint{margin-top:22px;font-size:12.5px;color:var(--ink3);display:flex;align-items:center;gap:7px}
+.hint::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.55}
+.hint .kbd{display:inline-block;padding:1px 6px;border-radius:5px;border:1px solid var(--line);background:#fafbfe;font-size:11px;font-family:ui-monospace,monospace}
+
+.back{display:none;margin-top:6px}
+.card.revealed .back{display:block;animation:fadeUp .26s ease both}
+.card.revealed .hint{display:none}
+.sec{padding:14px 0;border-top:1px dashed var(--line)}
+.sec:first-child{border-top:none;padding-top:16px}
+.lbl{font-size:11.5px;font-weight:700;color:var(--ink3);letter-spacing:1.2px;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.lbl::before{content:"";width:3px;height:11px;border-radius:2px;background:var(--accent)}
+.one{font-size:15.5px;color:var(--ink);line-height:1.75}
+.pts{list-style:none;display:grid;gap:8px}
+.pts li{position:relative;padding-left:15px;font-size:13.8px;color:var(--ink2);line-height:1.72}
+.pts li::before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:50%;background:#c5cee0}
+.sec--use .lbl::before{background:var(--teal)}
+.sec--jd{background:#f3f7fd;margin:0 -10px;padding:13px 10px;border-radius:11px;border-top:none}
+.sec--jd .lbl::before{background:var(--accent)}
+.sec--jd p{font-size:13.8px;color:#22406e;line-height:1.72}
+.sec--trap{background:#fdf8f2;margin:4px -10px 0;padding:14px 10px;border-radius:11px;border-top:none}
+.sec--trap .lbl::before{background:var(--warn)}
+.sec--trap p{font-size:13.8px;color:#7a4a08;line-height:1.72}
+.sec--use p{font-size:13.8px;color:var(--ink2);line-height:1.72}
+
+/* ---------- rating ---------- */
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.rate button{padding:11px 4px;border-radius:11px;font-size:13px;font-weight:600;border:1px solid var(--line);background:#fff;transition:.15s;color:var(--ink2)}
+.rate button:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(20,30,60,.09)}
+.rate button span{display:block;font-size:10.5px;font-weight:500;color:var(--ink3);margin-top:1px}
+.rate .q0{border-color:#f0d5d1;color:var(--danger)}
+.rate .q3{border-color:#f3e2c7;color:var(--warn)}
+.rate .q4{border-color:#cfe0f2;color:var(--accent)}
+.rate .q5{border-color:#cbe8e2;color:var(--teal)}
+
+/* ---------- done ---------- */
+.done{background:#fff;border-radius:var(--radius);padding:40px 24px;text-align:center;border:1px solid var(--line);box-shadow:0 8px 24px rgba(20,30,60,.05)}
+.done h2{font-size:21px;margin-bottom:8px}
+.done p{font-size:13.5px;color:var(--ink3);margin-bottom:22px}
+.done__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 24px}
+.done__grid div{background:var(--soft);border-radius:12px;padding:12px 8px}
+.done__grid b{display:block;font-size:20px;color:var(--accent)}
+.done__grid span{font-size:11.5px;color:var(--ink3)}
+.btn{display:inline-block;padding:11px 22px;border-radius:11px;background:var(--accent);color:#fff;font-size:13.5px;font-weight:600;transition:.15s}
+.btn:hover{background:var(--accent-2)}
+.btn--ghost{background:#fff;color:var(--accent);border:1px solid var(--line)}
+.btn--ghost:hover{background:var(--soft)}
+
+/* ---------- quiz ---------- */
+.qcard{background:#fff;border-radius:var(--radius);padding:24px 22px;border:1px solid var(--line);box-shadow:0 8px 24px rgba(20,30,60,.05)}
+.qask{font-size:12px;color:var(--ink3);letter-spacing:.5px;margin-bottom:12px}
+.qtext{font-size:17px;line-height:1.72;color:var(--ink);font-weight:500}
+.opts{display:grid;gap:9px;margin-top:22px}
+.opt{text-align:left;padding:13px 15px;border-radius:11px;border:1px solid var(--line);background:#fff;font-size:14px;transition:.15s;color:var(--ink2)}
+.opt:hover:not(:disabled){border-color:#c3d3ec;background:#fafbfe}
+.opt.right{border-color:#9ed4c8;background:#eefaf7;color:#0b6b60;font-weight:600}
+.opt.wrong{border-color:#eec2bb;background:#fdf1ef;color:#a33a2a}
+.opt:disabled{cursor:default;opacity:.85}
+.qexp{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line);display:none}
+.qexp.on{display:block;animation:fadeUp .25s both}
+.qexp .t{font-weight:700;color:var(--accent);font-size:14px;margin-bottom:6px}
+.qexp p{font-size:13.5px;color:var(--ink2)}
+
+/* ---------- bank ---------- */
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.filters button{font-size:12.5px;padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--ink2)}
+.filters button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.search{width:100%;padding:11px 14px;border-radius:11px;border:1px solid var(--line);background:#fff;font-size:14px;margin-bottom:12px;font-family:inherit;color:var(--ink)}
+.search:focus{outline:none;border-color:#b8cdec;box-shadow:0 0 0 3px rgba(27,75,143,.08)}
+.item{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.item__h{width:100%;text-align:left;padding:13px 15px;display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:600;color:var(--ink)}
+.item__h .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.item__h .st{font-size:11px;font-weight:600;padding:2px 7px;border-radius:99px;flex:none;font-variant-numeric:tabular-nums}
+.st--new{background:#eef0f5;color:#8b93a5}
+.st--due{background:#fdf0e4;color:#c2760a}
+.st--ok{background:#e8f2fb;color:#1b4b8f}
+.item__h .cat{margin-left:auto;font-size:11px;font-weight:500;color:var(--ink3);flex:none;white-space:nowrap}
+.item__b{display:none;padding:0 15px 14px;font-size:13.5px;color:var(--ink2);line-height:1.75}
+.item.open .item__b{display:block;animation:fadeUp .2s both}
+.item__b .k{color:var(--ink3);font-size:11.5px;font-weight:700;letter-spacing:.8px;display:block;margin:10px 0 3px}
+
+/* ---------- stats ---------- */
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+.panel h3{font-size:13px;color:var(--ink3);letter-spacing:1px;font-weight:700;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpis div{text-align:center}
+.kpis b{display:block;font-size:22px;color:var(--ink);font-weight:700}
+.kpis span{font-size:11.5px;color:var(--ink3)}
+.heat{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.heat i{aspect-ratio:1;border-radius:4px;background:#eceff6;display:block;position:relative}
+.heat i.l1{background:#d5e2f4}.heat i.l2{background:#a8c2e6}.heat i.l3{background:#5f8cc9}.heat i.l4{background:#1b4b8f}
+.cat-row{margin-bottom:11px}
+.cat-row__t{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink2);margin-bottom:5px}
+.cat-row__t b{color:var(--ink3);font-weight:600}
+.bar{height:6px;border-radius:99px;background:#eceff6;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),#3b7dd8);transition:width .4s}
+.tools{display:flex;gap:9px;flex-wrap:wrap}
+.tools button,.tools label{padding:9px 15px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:13px;color:var(--ink2);cursor:pointer}
+.tools button:hover,.tools label:hover{background:var(--soft)}
+.tools .danger{color:var(--danger);border-color:#f0d5d1}
+.sel{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:13px;font-family:inherit;color:var(--ink2)}
+.foot{text-align:center;font-size:11.5px;color:#aab0bd;margin-top:26px;line-height:1.9}
+@media(max-width:520px){
+  .term{font-size:22px}
+  .rate{grid-template-columns:repeat(2,1fr)}
+  .kpis{grid-template-columns:repeat(2,1fr);gap:14px}
+  .card{padding:20px 17px 17px}
+  .sec--trap{margin:4px -6px 0;padding:13px 8px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top__bar"><div class="top__fill" id="bar"></div></div>
+  <div class="wrap top__in">
+    <div class="brand"><span class="mark"></span>工程概念 · 每日一推</div>
+    <div class="top__meta">
+      <span id="metaToday">今日 0/0</span>
+      <span class="streak" id="metaStreak">连续 0 天</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="tabs">
+    <button data-v="today" class="on">今日</button>
+    <button data-v="quiz">四选一</button>
+    <button data-v="bank">题库</button>
+    <button data-v="data">数据</button>
+  </nav>
+
+  <section id="v-today"></section>
+  <section id="v-quiz" hidden></section>
+  <section id="v-bank" hidden></section>
+  <section id="v-data" hidden></section>
+
+  <div class="foot">
+    间隔重复调度 · 进度自动备份 · 断网可用<br>
+    加到主屏即可离线打开，进度存在本机
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   数据：每条形如 [分类, 术语, 英文, 一句话定义, 要点(用|分隔), 工程用法, 易踩的坑]
+   ============================================================ */
+const RAW = [
+['sens','激光雷达','LiDAR / Light Detection and Ranging','用激光测距加扫描，直接得到目标距离并生成三维点云的主动传感器。','测距主流两条路线：dToF 直接飞行时间，用 SPAD 或 SiPM 数纳秒级计时；FMCW 调频连续波，用拍频解距离，还能同时得到径向速度|扫描形态：机械旋转 360 度、半固态 MEMS 微振镜或转镜、纯固态 OPA 光学相控阵与 Flash 泛光|核心指标：量程、点频（点/秒）、角分辨率、FOV、最小盲区、最低反射率、帧率|1550nm 的人眼安全阈值约为 905nm 的数十倍，可以堆功率换量程，但探测器要换 InGaAs，成本高','车端做三维障碍物检测、可行驶区域提取、建图与定位。进融合链路之前必须先完成外参标定与时间同步，否则后面的对齐全是错的。','「激光雷达不受光照影响」只在弱光成立：905nm 在强日照下仍有背景噪声。雨雾衰减远大于毫米波，恶劣天气还得靠毫米波兜底。'],
+['sens','毫米波雷达','Millimeter Wave Radar','用 24 或 77GHz 毫米波发射 FMCW 信号，测距、测速、测角的主动传感器。','车载主流 76 到 81GHz，带宽可达 4 到 5GHz，距离分辨率约等于 c 除以 2B，1GHz 带宽对应 15cm|输出四维点云（距离、方位、俯仰、多普勒速度），能直接测径向速度，这是相机和激光雷达都给不了的|波长毫米级，穿透雨雾烟尘好、成本低、全天候；代价是角分辨率差，且易受金属多径与井盖干扰|4D 成像雷达用 MIMO 虚拟阵列加多片级联把俯仰维做出来，替代部分激光雷达功能','AEB 与 ACC 的主传感器、盲区监测、雨雾场景兜底，速度这个直接量测量对跟踪滤波特别有价值。','静态金属目标（井盖、护栏、龙门架）会产生大量虚假点，所以雷达点云不能直接当障碍物，要先用 RCS、多普勒、高度三重过滤。'],
+['sens','超声波雷达','Ultrasonic Sensor','靠 40 到 58kHz 声波往返时间测距的短距传感器，倒车雷达就是它。','量程通常 0.2 到 5m，波束角几十度，成本极低；对棉布、雪这类吸声或软性物体反射很弱|测距靠飞行时间，声速随温度变化约 0.6m/s 每摄氏度，温差大的场景必须做温度补偿|余振（ringing）导致近距离存在盲区，探头刚发完波时听不到回波|自动泊车用 12 个超声做近距离泊位探测，与环视相机互补','低速近距离避障、泊车车位检测、料位与液位测量。','超声只能测最近的回波，多个目标重叠时分不清个数，也测不出方位，除非用阵列做相位差。别指望它做目标分类。'],
+['sens','车载相机与快门','Automotive Camera / Global vs Rolling Shutter','用 CMOS 图像传感器把光强转成电荷再读出成图像；快门类型决定运动目标的成像畸变。','卷帘快门逐行曝光，高速运动或补光闪烁时产生果冻效应和斜线畸变；全局快门整帧同时曝光，适合测距与高速场景|动态范围 HDR 决定逆光下是否丢细节，车载普遍用多曝光合成|低照度看量子效率与读出噪声，不是单纯看像素数|镜头畸变（桶形、枕形）必须靠内参模型校正','车道线、交通标志、目标分类的主传感器，与激光雷达做点云到像素的投影融合。','卷帘快门加激光逐点扫描，同一帧内像素的时间戳各不相同，高速场景的时空对齐误差可达几十毫秒。'],
+['sens','深度相机','RGB-D Camera','一次成像直接给每个像素深度的相机，三条主流路线：结构光、ToF、双目立体。','结构光投射已知编码图案，靠图案形变做三角测量，近距离精度高（毫米级），强光下失效|ToF 发射调制光测相位差，中远距、帧率高，但受多径与反射率影响大|双目靠视差加极线校正，不依赖主动光源，弱纹理区域（白墙）容易失效|共同短板：室外强日照、高反光与透明材质','机器人近距离抓取、人脸与手势、室内 SLAM，是低价激光雷达的替代方案。','「深度相机比激光雷达便宜所以能替代」——量程和室外鲁棒性差一个量级，实际只能做近距离补盲。'],
+['sens','IMU 与 MEMS 误差','Inertial Measurement Unit','加速度计加陀螺仪组成的惯性测量单元，靠积分给出姿态、速度、位置，误差随时间累积发散。','三类误差：零偏（可标定）、随机游走（不可标定）、标度因数与轴间耦合|陀螺零偏积分成角度漂移，加速度二次积分成位置漂移，所以纯 IMU 不能单独定位|MEMS 器件受温度影响大，要做温漂补偿与在线零偏估计|与轮速、视觉、GNSS 组合（松耦合或紧耦合）才能压住漂移','短时高频位姿预测、点云去畸变（运动补偿）、与激光雷达或视觉紧耦合做里程计。','高采样率不等于高精度。IMU 的价值在「高频且短期准」，长期必须靠外部观测约束，别指望它单独跑出轨迹。'],
+['sens','GNSS 与 RTK','GNSS / RTK / Integrated Navigation','卫星定位给绝对位置，RTK 与 PPK 用载波相位差分把精度从米级做到厘米级。','单点定位米级；RTK 需要基站或网络差分服务，固定解才到厘米级，浮点解分米级|城市峡谷、隧道、树荫下多路径与遮挡导致失锁，是自动驾驶定位的主要失效场景|组合导航（GNSS 加 IMU）用卡尔曼滤波做松耦合或紧耦合，失锁时靠 IMU 推算|PPP-RTK 免基站但收敛慢，需要几十秒','全局定位、地图匹配初值、多传感器融合里的绝对约束来源。','固定解指载波相位整周模糊度固定成功，不是精度固定。多路径环境下仍可能给出错误的固定解，必须做一致性检验。'],
+['sens','编码器','Encoder','把转角或转速转成电信号的传感器，分增量式与绝对式两类。','增量式输出 A/B 正交脉冲加 Z 零位，靠计数与方向判断，断电丢位置，需回零|绝对式（SSI、BiSS、多圈）上电即知角度，无需回零|四倍频：对 A/B 的上升沿和下降沿都计数，分辨率乘以 4|线数乘倍频除以每转等于角分辨率；轮式底盘用轮速积分做里程计','电机闭环（伺服、云台）、轮式里程计、机械臂关节反馈。','增量编码器丢脉冲（干扰或超速）会永久性累计误差，必须靠 Z 相或外部观测校正，单纯重试是没用的。'],
+['sens','事件相机','Event Camera','每个像素异步输出亮度变化事件（x、y、t、极性）的仿生传感器，微秒级延迟、超高动态范围。','只输出变化，数据稀疏且没有绝对亮度，于是动态范围可超 120dB、也没有运动模糊|时间分辨率微秒级，适合高速与低延迟场景|传统 CNN 不能直接用，需要事件帧、体素网格或图神经网络表示|成本高、生态小，多用于科研与高速避障','高速运动估计、低光 SLAM、无人机避障。','静态场景几乎无输出，纯事件相机无法做纹理匹配和回环检测，工程上基本都得配一台帧相机。'],
+['sens','相机内参与畸变','Intrinsics & Distortion Model','内参是像素坐标系与相机坐标系的投影关系（fx、fy、cx、cy），畸变模型描述透镜的非线性偏差。','针孔模型：u 等于 fx 乘 X 除 Z 再加 cx，fx 等于 f 除 dx，单位是像素|径向畸变 k1、k2、k3 对应桶形与枕形，切向畸变 p1、p2 来自透镜与传感器不平行|标定用棋盘格或圆点靶，张正友法先闭式解初值再做最大似然优化|鱼眼要用等距或等立体角模型，普通 k1k2 拟合不出来','去畸变、点云投影、三角测距、视觉 SLAM 的投影函数。','换镜头、变焦、撞击之后内参就失效了。温度变化会让焦距轻微漂移，高精度场景需要在线自标定。'],
+['sens','光电探测器 SPAD 与 APD','Photodetector: PIN / APD / SPAD / SiPM','把光子转成电信号的器件，是激光雷达的「眼睛」，灵敏度与量程由它决定。','PIN 光电二极管线性模式、无增益、便宜，905nm 直接探测常用它|APD 雪崩二极管内部倍增 10 到 100 倍，需要高压偏置与温度补偿|SPAD 单光子雪崩二极管工作在盖革模式，单个光子即可触发，需要淬灭电路，SiPM 就是 SPAD 阵列|InGaAs 覆盖 1550nm，成本高；硅的截止波长约 1100nm','dToF 激光雷达的接收端，SPAD 阵列可做固态 Flash 面阵。','SPAD 有死时间与后脉冲，强回波下会自我致盲。灵敏度高也意味着更容易被阳光和别的雷达误触发。'],
+
+['radar','FMCW 调频连续波','Frequency Modulated Continuous Wave','发射频率随时间线性上升的连续波，用回波与本振的拍频测距离，用多普勒测速度。','距离来自拍频 f 等于 2 乘 B 乘 R 除（c 乘 T）；速度来自相邻 chirp 之间的相位差|同时得到距离与速度，发射功率低，容易集成到 CMOS 芯片|距离分辨率由扫频带宽 B 决定，速度分辨率由相干处理总时长决定|锯齿波调制更常用，配二维 FFT 得到距离-多普勒图','车载 77GHz 雷达、液位计、测速雷达的核心体制。','「FMCW 测距准」要区分分辨率与精度：带宽决定分辨率，信噪比和算法决定精度，两件事不能混着说。'],
+['radar','多普勒与径向速度','Doppler Effect','目标与雷达相对运动导致回波频率偏移，偏移量与径向速度成正比。','f_d 等于 2 乘 v_r 除 λ；77GHz 下 1m/s 大约对应 513Hz|只能测径向分量，纯横向运动在雷达看来速度为零，这就是切向盲区|符号区分靠近与远离，静止目标 f_d 接近零，可据此滤掉静态杂波|速度直接量测是雷达相对相机的核心优势，跟踪时不用靠位置差分估计','目标速度估计、静止杂波抑制、卡车与护栏的区分。','横穿目标（俗称鬼探头）的径向速度接近零，雷达容易当静止物过滤掉，这是 AEB 漏检最经典的原因。'],
+['radar','距离分辨率与带宽','Range Resolution','能分辨两个目标的最小距离差，FMCW 下等于 c 除以 2B。','4GHz 带宽约 3.75cm，1GHz 带宽约 15cm|分辨率不是精度：精度靠信噪比与插值，分辨率靠带宽|大带宽受法规限制，76 到 81GHz 可用约 5GHz 带宽|激光雷达的距离分辨率由脉宽与计时精度决定，是另一个量级（cm 级）','选型时先算分辨率够不够分开「人加车」这类近距目标。','宣传「测距精度 ±5cm」的雷达可能带宽只有 1GHz，两个相距 10cm 的目标依然分不开。指标要看全。'],
+['radar','最大不模糊速度','Maximum Unambiguous Velocity','由 chirp 重复周期决定的速度测量上限，超过就发生速度模糊（混叠）。','v_max 等于 λ 除以（4 乘 T_c），T_c 为 chirp 周期|相邻 chirp 的相位差超过正负 π 就无法唯一解出速度|解模糊手段：多 PRF 参差、空时编码、多帧跟踪连续性检验|本质与时间采样定理同源，只是采样维度从时间换成了 chirp 序列','高速场景（150km/h 以上）选型必须核算 v_max，否则测速会跳变。','提高 v_max 要缩短 chirp 周期，代价是带宽与积分时间下降，距离分辨率与信噪比一起变差。这是典型的速度与距离折中。'],
+['radar','MIMO 虚拟阵列','MIMO Virtual Array','N 发 M 收天线通过正交波形形成 N 乘 M 个虚拟阵元，用少量硬件把角度分辨率做大。','虚拟阵元数等于 N 乘 M，等效口径变大，角分辨率近似 λ 除以（2 乘 N 乘 M 乘 d）|正交靠 TDM（分时）、FDM（分频）、DDM（多普勒分多址）实现|TDM 实现简单，但降低等效采样率，高速目标会出现耦合误差|多片级联可做到数百虚拟通道，这就是 4D 成像雷达的硬件基础','提升方位与俯仰分辨率，让雷达点云稠密到接近低线束激光雷达。','虚拟阵列的排布必须满足稀疏阵列理论（无冗余、低栅瓣），随便摆放会出现角度模糊（栅瓣），测角直接错。'],
+['radar','CFAR 恒虚警检测','Constant False Alarm Rate','用滑窗估计局部噪声功率并自适应设阈值，使虚警概率保持恒定。','CA-CFAR（单元平均）适合均匀杂波；GO 与 SO-CFAR 抗多目标与杂波边缘|阈值因子由给定虚警率 Pfa 与参考单元数反解得到|保护单元的作用是防止目标能量泄漏进噪声估计，把阈值抬高|本质是自适应门限检测，是雷达点云生成的最后一步','从距离-多普勒图中挑出目标点，输出点云给后续跟踪。','CFAR 在密集目标区会互相遮蔽：强目标抬高局部阈值，把旁边的弱目标一起吞掉。'],
+['radar','雷达截面积 RCS','Radar Cross Section','衡量目标对雷达波散射能力的等效面积，常用 dBsm 表示。','与尺寸、形状、材质、入射角、极化都有关，不是几何投影面积|金属平板正对时 RCS 很大，隐身设计靠外形偏折能量加吸波材料|人对 77GHz 的 RCS 约在 1 平方米量级，自行车与行人差异明显|RCS 可用于粗分类（车、人、杆）与虚警过滤','用 RCS 加多普勒加高度做点云过滤与粗分类，压掉井盖、龙门架这类虚警。','RCS 随视角剧烈起伏（闪烁现象），单帧 RCS 不是稳定特征，必须做多帧统计。'],
+['radar','4D 成像雷达','4D Imaging Radar','在距离、方位、速度之外补上俯仰维，输出带高度的稠密点云。','靠 MIMO 虚拟阵列加多片级联做出俯仰维，通道数可达数百|点云密度接近低线束激光雷达，同时保留速度信息，且全天候|可估高度，于是能区分高架桥与地面、识别低矮障碍|算力与数据率暴涨，需要片上 FFT 与专用处理链','低成本车型用它替代激光雷达做高速 NOA，或作为激光雷达的雨雾冗余。','俯仰分辨率仍远低于激光雷达，静态金属多径虚警问题没有消失，只是被更强的处理链压低了。'],
+['radar','雷达互扰','Radar Interference','多台雷达同时工作，A 的发射被 B 收到，形成虚假目标或底噪抬升。','表现为距离-多普勒图上的斜线、噪底抬升，严重时产生幽灵目标|缓解手段：随机化 chirp 参数（跳频、相位编码）、时隙协同、极化隔离|互扰是概率事件，随装车量上升会快速恶化，属于典型的规模效应问题|激光雷达也有互扰，905nm 机械式尤其明显，原理类似','量产车型的互扰测试；车队与路口场景要求算法对幽灵目标有鲁棒性。','互扰虚警是间歇性且位置随机的，靠单帧跟踪很难剔除，必须用多帧一致性检验。'],
+['radar','采样定理与混叠','Nyquist Sampling / Aliasing','采样率必须大于信号最高频率的 2 倍，否则高频会折叠成低频假象，且不可逆。','奈奎斯特频率等于 fs 除以 2，超过就发生混叠|工程上先做抗混叠模拟低通，再进 ADC 采样|欠采样（带通采样）可用于窄带高频信号，但需要精确设计中心频率与带宽|图像与点云的混叠表现为摩尔纹、栅瓣、伪影','ADC 选型、雷达与超声信号链设计、图像降采样前的抗混叠滤波。','采样之后再数字滤波无法恢复混叠成分，抗混叠必须发生在 ADC 之前。这是原理性的，不是工程技巧。'],
+['radar','FFT 与加窗','FFT & Windowing','把时域信号变换到频域；直接截断会产生频谱泄漏，加窗可抑制旁瓣但展宽主瓣。','频率分辨率等于 fs 除以 N，与补零无关，补零只做插值|矩形窗主瓣最窄但旁瓣最高（约 -13dB），汉宁与汉明旁瓣低但主瓣展宽|雷达的距离维与速度维都做 FFT，输出二维距离-多普勒图|旁瓣高会让强目标的泄漏淹没邻近弱目标','雷达距离-多普勒处理、振动分析、音频与超声处理。','「补零提高分辨率」是常见误解。补零只提高频谱的采样密度，让曲线更平滑，不提高真实的频率分辨能力。'],
+['radar','数字滤波器 FIR 与 IIR','FIR / IIR Filter','用离散卷积（FIR）或递归差分方程（IIR）改变信号频响的两类滤波器。','FIR 可做到严格线性相位、总是稳定，但阶数高、延迟大|IIR 用低阶就能实现陡峭过渡带，但相位非线性、存在稳定性风险|线性相位对多传感器时间对齐很重要，否则不同频率成分延迟不同，波形会被扭曲|设计方法：窗函数法与最小二乘用于 FIR，双线性变换用于 IIR','传感器去噪、IMU 低通、雷达杂波抑制。','滤波器的群延迟是固定的系统时延，做时间同步时必须显式补偿，否则标定与融合会出现系统性偏差。'],
+
+['fusion','外参标定','Extrinsic Calibration','求两个传感器坐标系之间的刚体变换（旋转 R 加平移 t），是融合的前提。','靶标法：共视标定板或角反射器，分别提取特征点后求解 PnP 或最小二乘|无靶标：基于运动的手眼标定、基于互信息或边缘对齐、基于深度连续性|精度评估看重投影误差（像素）或平面拟合误差（厘米）|外参随装配应力、温度、碰撞漂移，量产需要下线标定加在线自标定','点云投影到图像、BEV 融合、雷达与相机联合检测。','标定误差是系统性偏差，不会随数据量增大而消失。1 度的角度误差在 50m 处约造成 0.87m 的位置误差。'],
+['fusion','内参标定','Intrinsic Calibration (Zhang)','用平面棋盘格多姿态成像，闭式解出内参与外参初值，再做非线性优化。','单应矩阵提供 2 个约束，至少 3 个不同姿态才够解 5 个内参|初值靠闭式解，最终用 LM 最小化重投影误差|通常联合估计 k1、k2、p1、p2，k3 需要更多视角才能稳定|评价指标：平均重投影误差小于 0.3 像素算好','相机出厂标定、换镜头后重标、鱼眼与广角标定。','只用正对相机的棋盘格会让参数病态不可观，必须覆盖画面四角与不同倾斜角。'],
+['fusion','时间同步','Time Synchronization','让多传感器数据共享同一时间基准，是时空对齐的另一半。','硬同步：PPS 秒脉冲加 PTP、gPTP 触发曝光与采样，精度可达微秒级|软同步：用主机时间戳打点，受 USB、驱动、队列延迟影响，误差毫秒级且抖动大|融合要求时间误差小于「运动引起的位置误差容限」，高速时必须优于 10ms|相机时间戳应记曝光中点，而不是帧到达主机的时间','激光雷达与相机及 IMU 的联合标定、点云运动补偿、多雷达点云拼接。','帧率不同（相机 30Hz、雷达 10Hz、IMU 200Hz）不能靠「取最近帧」硬凑，必须插值位姿或做连续时间建模。'],
+['fusion','齐次变换与坐标链','Homogeneous Transform','用 4 乘 4 矩阵把旋转和平移合成一次线性运算，便于多级坐标系串联。','T 等于 [R t; 0 1]，逆变换等于 [R 转置, 负 R 转置乘 t]|坐标链：世界到车体到传感器，逐级相乘，左乘右乘不能搞反|左乘表示在父坐标系下变换，右乘表示在自身坐标系下变换，混用是高频 bug|点云变换用 T 乘齐次坐标，法向量只乘 R','手眼标定、点云配准、ROS 2 的 TF2 坐标树。','顺序错误（先旋转再平移 vs 先平移再旋转）是融合结果「差一点但找不到原因」的头号来源。务必拿小例子手算验证。'],
+['fusion','四元数与万向锁','Quaternion & Gimbal Lock','用 4 个分量表示旋转，避免欧拉角在俯仰正负 90 度时的自由度丢失。','万向锁：欧拉角三轴旋转在特定角度下有两轴重合，失去一个自由度|单位四元数表示旋转，乘法可组合，且双覆盖（q 与 -q 表示同一姿态）|插值用 SLERP，欧拉角直接线性插值会抖动甚至穿模|四元数不直观，调参与可视化时需要转回欧拉角','IMU 姿态、TF 变换、轨迹优化中的旋转参数化。','用欧拉角做优化变量会在万向锁附近数值爆炸，SLAM 与标定必须用四元数或李代数 so(3)。'],
+['fusion','手眼标定','Hand-Eye Calibration: AX = XB','求两个刚性连接的传感器或执行器之间的固定变换，靠多组相对运动构造方程。','经典形式 AX 等于 XB，A 与 B 是两次运动各自的相对位姿，X 为待求变换|先解旋转（用轴角或四元数），再解平移，两步分离能显著简化问题|至少需要两组旋转轴不平行的运动，否则退化不可解|激光雷达与 IMU、相机与机械臂都用这一套','多传感器外参、机械臂视觉引导（eye-in-hand 与 eye-to-hand）。','运动轨迹若近似平面或纯平移，旋转轴单一，导致平移分量不可观。标出来的数看着合理，其实是错的。'],
+['fusion','前融合与后融合','Early / Late Fusion','前融合在原始或特征层合并多模态数据，后融合在各自的检测结果层做融合。','前融合信息保留多、精度上限高，但对时空对齐极其敏感|后融合各传感器独立出目标框再关联，鲁棒、易调试、容错好，但信息损失大|特征级融合是折中：各自提特征后在 BEV 或查询空间对齐融合|量产倾向后融合加局部前融合的混合架构，兼顾可解释性与性能','激光雷达加相机加毫米波的目标检测与跟踪。','前融合不是越先进越好：外参误差 1 度时，前融合性能可能直接掉到不如单模态。架构选择要先看标定精度。'],
+['fusion','融合的三个层级','Data / Feature / Decision Level Fusion','按融合发生的位置划分的三个层级，信息损失依次增大、容错性依次增强。','数据级：原始信号或点云直接合并，要求同质或精确时空对齐|特征级：提取 embedding 或 BEV 特征后融合，方式有拼接、注意力、加权|决策级：各自输出类别与置信度，用贝叶斯、投票、D-S 证据理论合并|选择依据：传感器同质性、对齐精度、算力、可解释性要求','架构设计时的第一层决策，写方案与答辩必被问。','「数据级融合一定最好」忽略了传感器异质（点云 vs 像素）与失配风险，工业界很少真做原始数据级融合。'],
+['fusion','数据关联','Data Association','判断当前帧的检测与已有轨迹、或跨传感器目标之间是不是同一个东西。','代价矩阵加匈牙利算法求全局最优匹配（最小总代价）|代价常用 IoU、马氏距离（含协方差，比欧氏距离合理）、外观特征距离|先做门限（gating）剔除明显不可能的对，再求解|关联错误会导致轨迹交换，即 ID switch，是跟踪的核心难点','多目标跟踪、多传感器同一目标合并、SLAM 的数据关联。','贪心最近邻在目标交叉与遮挡时必然出错，必须做全局匹配加运动预测，不然目标一交叉 ID 就乱。'],
+['fusion','时空对齐','Spatio-Temporal Alignment','把不同传感器、不同时刻的观测统一到同一坐标系与同一时刻。','空间：外参变换加运动补偿，点云要按每点时间戳去畸变|时间：硬件同步加位姿插值，把观测投影到统一参考时刻|高速或大角速度时，10ms 错位可造成数十厘米偏移|评价方式：对齐后点云投影的边缘锐度、互信息','激光雷达与相机融合、多雷达拼接、BEV 时序融合。','只做空间标定不做时间去畸变，是激光雷达融合精度上不去的常见根因，而且很难从指标上看出来。'],
+['est','卡尔曼滤波','Kalman Filter','在「预测（状态方程）」与「校正（观测）」之间用协方差加权的最优线性估计器。','五步：预测状态、预测协方差、算卡尔曼增益、更新状态、更新协方差|增益 K 由预测不确定度 P 与观测噪声 R 自动权衡：P 大就更信观测，R 大就更信预测|前提是线性系统加高斯噪声，噪声统计特性必须已知或可估|工程上调 Q 与 R 本质是在调「信任谁」，不是纯数学问题','多传感器融合、目标跟踪、IMU 与 GNSS 组合、姿态估计。','Q 与 R 不是越大越好或越小越好：Q 太大会跟着噪声抖，R 太大会迟钝滞后。要从数据里估，别凭手感调。'],
+['est','扩展卡尔曼滤波','Extended Kalman Filter','把非线性系统在当前估计点做一阶泰勒展开（雅可比），然后套用卡尔曼滤波。','用雅可比矩阵线性化状态方程 f 与观测方程 h，其余步骤与 KF 相同|线性化误差在强非线性或大初始误差时会发散|雅可比推导极易出错，建议用数值求导交叉验证|激光雷达的距离-方位观测是典型非线性模型，必须用 EKF 或 UKF','EKF-SLAM、雷达目标跟踪（极坐标观测）、组合导航。','极坐标观测下直接对 x、y 用 KF 会产生有偏估计，必须改观测模型或用 UKF，不能硬套线性公式。'],
+['est','无迹卡尔曼滤波','Unscented Kalman Filter','用一组 sigma 点传播均值与协方差，避免求雅可比，且能达到二阶精度。','取 2n+1 个 sigma 点，经非线性函数传播后重构统计量|无需解析雅可比，实现简单，精度优于 EKF 的一阶线性化|计算量约为 EKF 的 2n+1 倍，n 为状态维数|对强非线性（大角度、极坐标）明显优于 EKF','姿态估计、雷达目标跟踪、高维非线性融合。','状态维数高（如 SLAM 的数千维）时 UKF 不可用，只能退回 EKF 或图优化。'],
+['est','粒子滤波','Particle Filter','用一组带权样本（粒子）近似任意形状的后验分布，能处理非高斯、多峰的情况。','采样、加权、重采样三步，重采样用来解决权重退化|粒子数决定精度，计算量随状态维数指数增长，即维数灾难|适合多假设场景，比如全局定位、绑架机器人问题|与蒙特卡洛定位（AMCL）同源','激光雷达全局定位、多模态后验、非高斯噪声下的状态估计。','粒子数不足会过早收敛到错误假设，重采样过度会造成样本贫化（粒子重复、失去多样性）。'],
+['est','互补滤波','Complementary Filter','用高通保留陀螺的短期动态、低通保留加速度计或磁力计的长期参考，再加权相加。','结构极简，计算量远小于 KF，适合在 MCU 上实时解算姿态|权重对应截止频率：α 越大越信陀螺，越平滑但响应越慢|Mahony 与 Madgwick 是它在 SO(3) 上的经典实现|只在「一个高频好、一个低频好」的互补特性下有效','STM32 上的 IMU 姿态解算、云台增稳、低成本飞控。','剧烈运动时加速度计测到的是重力加运动加速度，此时低频参考是错的，需要按加速度幅值动态调权。'],
+['est','ICP 点云配准','Iterative Closest Point','迭代最近点：找对应点、估计刚体变换、变换点云、重复直到收敛。','需要较好初值，否则容易陷入局部最优|点到点与点到面（point-to-plane）两类，后者收敛更快、精度更高|对应点用 KD-Tree 最近邻搜索，必须配外点剔除|输出配准残差可作为里程计与回环的置信度','激光雷达帧间里程计（scan-to-scan、scan-to-map）、点云拼接、标定。','ICP 假设最近点就是对应点，大位移或结构重复（长廊、隧道）时必然错配，必须靠 IMU 或轮速给初值。'],
+['est','NDT 配准','Normal Distributions Transform','把参考点云体素化成高斯分布，用概率密度评分代替最近点搜索的配准方法。','每个体素存均值与协方差，目标函数是待配准点落在参考分布中的似然|不需要显式找对应点，对初值要求比 ICP 宽松，计算更稳|体素尺寸是关键参数：大则鲁棒但精度低，小则反之|Autoware 里 NDT 是主力配准方法','城市道路激光雷达定位与建图、大场景配准。','体素过大时细结构（路沿、杆状物）被抹平，横向精度明显变差，做横向定位时要调小。'],
+['est','位姿图与因子图','Pose Graph / Factor Graph Optimization','把位姿作为节点、相对观测作为边（因子），最小化所有残差的加权平方和。','用非线性最小二乘（GN 或 LM）求解，靠 Hessian 的稀疏结构加速（舒尔补）|加一条回环边就能全局闭合，误差被分摊到整条轨迹|因子图可统一表达 IMU 预积分、视觉重投影、激光匹配等异构约束|后端的核心思路是「用全局一致性换掉递推累积误差」','LIO-SAM、VINS、Cartographer 的后端，多传感器紧耦合。','一条错误的回环边足以把整张图拉歪，必须有鲁棒核函数（Huber、Cauchy）与异常边剔除。'],
+['est','RANSAC','Random Sample Consensus','随机采样最小点集拟合模型，统计内点数量，迭代取内点最多的模型。','迭代次数由内点率与期望成功概率决定，内点率越低迭代次数爆炸|能容忍大量外点，是直线、平面、基础矩阵估计的标准工具|内点判定阈值直接影响结果，要按噪声尺度设|PROSAC 与 MLESAC 是其改进版','地面平面拟合、点云直线与圆柱检测、外参粗标定、视觉基础矩阵。','内点率低于约 10% 时所需迭代次数不可接受，纯随机采样在高维模型上效率极差，要换引导采样。'],
+['est','点云聚类','Euclidean Clustering / DBSCAN','把点云分成若干连通目标簇，欧式聚类按距离阈值生长，DBSCAN 按密度定义核心点。','欧式聚类用 KD-Tree 半径搜索加并查集或区域生长，参数只有半径与最小点数|DBSCAN 能识别任意形状并标记噪声点，无需预设簇数|K-Means 需要预设簇数且假设球状分布，对不均匀密度点云不友好|分割前通常先做地面分割与下采样','障碍物分割、目标级跟踪的输入、点云去噪。','两个紧贴的目标（并排行走的人）会被聚成一簇，只靠聚类无法分开，必须引入语义或模型拟合。'],
+['est','地面分割','Ground Segmentation','从点云中剥离可行驶地面，剩下的才是障碍物候选。','常用方法：RANSAC 平面拟合、射线栅格高度差、渐进形态学滤波、Patchwork 系列|坡度与起伏路面用单一平面拟合会误删真实地面|分割错误会导致「把坡道当障碍」或「把低矮障碍当地面」|输出通常转成栅格占据地图交给规划使用','障碍物检测前置、可行驶区域提取、点云配准的特征筛选。','地面分割的阈值同时决定漏检与误检，没有一组参数通吃所有场景，必须按场景调或做自适应。'],
+
+['mcu','STM32 家族与内核','STM32 / ARM Cortex-M','ST 基于 ARM Cortex-M 内核的 MCU 产品线，按内核与主频分成 F0、F1、F3、F4、F7、H7 等系列。','Cortex-M0 与 M0+ 极简低功耗，M3 主流，M4 带 DSP 与单精度 FPU，M7 高性能双发射，M33 带 TrustZone|F1（M3，72MHz）经典入门，F4（M4F，168 到 180MHz）带 FPU 做算法，H7（M7，480MHz）能跑轻量视觉与控制|外设差异才是选型关键：定时器数量、ADC 位数与速率、CAN FD、以太网、USB、DCMI|选型顺序：外设够不够、主频与 Flash/RAM、封装与温度等级','电机控制、传感器采集、底盘与云台实时控制，常与 Jetson 或工控机分工。','主频高不等于实时性好：中断延迟、总线争用、Flash 等待周期都会吃掉性能，要按最坏情况核算。'],
+['mcu','NVIC 中断优先级','Nested Vectored Interrupt Controller','Cortex-M 的嵌套向量中断控制器，用抢占优先级加子优先级决定谁先响应、能否打断。','数值越小优先级越高；抢占优先级决定能否嵌套，子优先级只决定同时挂起时的顺序|优先级分组决定抢占位与子优先位的位数分配|中断服务函数应尽量短，耗时逻辑丢给任务或主循环|高优先级中断过多会让低优先级饿死，实时性反而变差','电机换相与编码器捕获中断给最高优先级，通信与日志放低优先级。','在中断里调用阻塞 API（HAL_Delay、阻塞式 I2C 等待）会拖垮整个系统实时性，这是最常见的中断设计错误。'],
+['mcu','DMA 直接存储器访问','Direct Memory Access','外设与内存之间直接搬运数据，不占用 CPU，适合大批量与高速数据。','配置源地址、目的地址、传输长度、触发源，搬完产生中断|典型用途：ADC 连续采样、串口不定长接收（IDLE 加 DMA）、SPI 刷屏、DCMI 图像|双缓冲可实现「搬一块、算一块」而不丢数据|注意缓存一致性：带 D-Cache 的 M7 与 H7 需要 clean 与 invalidate，否则读到旧数据','多路传感器高频采样、图像与音频流、通信收发。','DMA 与 CPU 同时访问同一块内存会有总线仲裁与缓存一致性问题，H7 上「玄学 bug」多半来源于此。'],
+['mcu','时钟树与 PLL','Clock Tree / PLL','MCU 内部由外部或内部振荡源经 PLL 倍频、再分频后分配给内核与外设的时钟网络。','HSE 外部晶振精度高，HSI 内部 RC 启动快但不准|PLL 输出经 AHB 与 APB 分频得到 HCLK、PCLK1、PCLK2，各外设挂在不同总线|串口与 CAN 的波特率误差来自时钟精度，晶振不准会直接导致通信误码|改主频必须同步改 Flash 等待周期与电压调节档位','低功耗降频、高性能超频、串口与 CAN 波特率精确配置。','只改 PLL 不改 Flash latency 是典型的「上电就跑飞」原因，改时钟一定要对照手册的对应关系表。'],
+['mcu','看门狗','Watchdog (IWDG / WWDG)','独立看门狗靠内部低速时钟计数，窗口看门狗还要求喂狗时机落在窗口内。','IWDG 用 LSI，主时钟挂了也能复位，适合防死循环|WWDG 由 APB 时钟驱动，喂早了也复位，能发现程序跑飞或乱序执行|喂狗应放在「所有关键任务都正常完成」之后，而不是定时器中断里无脑喂|调试时常关看门狗，导致问题量产后才暴露','量产固件的最后一道防线，配合复位原因寄存器做故障统计。','在定时器中断里喂狗等于没装看门狗：主循环卡死了但中断还在跑，设备永远不复位。'],
+['mcu','低功耗模式','Sleep / Stop / Standby','逐级关闭内核、外设、时钟与电源域，换取更低的静态电流。','Sleep 只停内核，任何中断可唤醒；Stop 关掉大部分时钟，靠 EXTI 或 RTC 唤醒，SRAM 保留；Standby 断主电源域，SRAM 丢失|唤醒时间与功耗成反比，要按唤醒频率选档|外设漏电（上拉电阻、悬空引脚、未关外设时钟）常常比 MCU 本身更耗电|RTC 加低功耗定时器可做周期性唤醒采样','电池供电的传感节点、无线采集器、待机唤醒。','悬空的 GPIO 输入会因电平抖动产生漏电，低功耗设计必须把未用引脚设成模拟输入或固定电平。'],
+['mcu','Bootloader 与 OTA','Bootloader / Over-the-Air Update','上电先跑 Bootloader，由它决定跳转到 App 还是进入升级流程。','Flash 分区：Bootloader、App A、App B（双备份）、参数区|升级流程：接收固件、校验（CRC 与签名）、写备份区、置标志、重启后由 Bootloader 搬运或切换|必须做断电保护：标志位与固件完整性校验缺一不可，否则变砖|回滚机制：新固件启动失败（未按时喂狗或未置成功标志）自动回退旧分区','车机、域控制器、底盘 ECU 的远程升级。','只做 CRC 不做签名校验，等于任何人都能刷入任意固件，这是车规安全审计的必查项。'],
+['mcu','栈溢出','Stack Overflow','栈用于函数调用、局部变量与中断现场保存，溢出会踩坏相邻内存导致随机跑飞。','栈大小在启动文件或链接脚本里定义，中断嵌套会额外占用|大数组、递归、printf 系列是栈杀手|检测手段：栈填充魔数后查水位、用 MPU 设栈底保护页|堆（malloc）碎片化在长期运行的嵌入式里是隐患，很多编码规范直接禁用动态内存','RTOS 任务栈分配、中断栈规划、稳定性压测。','「编译通过、跑一会儿才崩」的随机 HardFault，八成是栈溢出或野指针，而不是业务逻辑写错。'],
+['mcu','RTOS 调度与优先级反转','Priority Inversion','抢占式优先级调度下，高优先级任务因等待被低优先级任务占用的资源，而被中优先级任务间接阻塞。','链路：低优先级持锁，中优先级抢占 CPU，高优先级等锁超时|解决：优先级继承（持锁时临时提升到等待者优先级）或优先级天花板|FreeRTOS 互斥量默认支持优先级继承，二值信号量不支持|还要关注任务栈、tick 精度、临界区长度、中断与任务的优先级设计','实时控制系统（电机、底盘）的任务划分与资源设计。','用二值信号量当互斥锁用，就没有优先级继承保护。1997 年火星探路者号就是栽在这个坑上，反复重启。'],
+['mcu','队列、信号量、互斥量','FreeRTOS IPC','任务间通信与同步的三件套：队列传数据、信号量做同步与计数、互斥量保护共享资源。','队列是值拷贝，适合小结构体；大块数据应传指针并约定所有权|二值信号量做事件通知，计数信号量做资源池或事件计数|互斥量有优先级继承，还有递归版本（同一任务可重复获取）|中断里只能用 FromISR 版本的 API','采集任务到处理任务的数据流水线、中断到任务的延迟处理。','在中断里调用非 FromISR 的 API 会破坏内核状态；在临界区里做耗时操作会让实时性全面下降。'],
+['mcu','PWM 与占空比','Pulse Width Modulation','用固定频率方波，通过调节高电平占比等效出不同的平均电压。','平均电压等于占空比乘供电电压；频率要远高于负载响应（电机 10kHz 以上避噪音，LED 1kHz 以上避闪烁）|电机调速要配 H 桥或驱动芯片，必须设死区时间防止上下管直通|舵机用 50Hz 加 0.5 到 2.5ms 脉宽对应角度，是脉宽而不是占空比思维|互补 PWM 加死区加刹车（break）是电机控制标配','电机调速、灯光调光、加热功率控制、粗糙的 DAC 替代。','死区时间太小会炸管，太大则低速转矩脉动明显、效率下降，这是硬件与固件要一起调的参数。'],
+['mcu','ADC 采样','Analog to Digital Converter','把模拟电压量化成数字量，位数决定分辨率，参考电压决定量程。','分辨率等于 Vref 除以 2 的 n 次方，12 位 3.3V 约 0.8mV；但真正反映精度的是有效位数 ENOB|采样时间要匹配源阻抗：高阻信号源必须加长采样时间或加运放缓冲|噪声抑制：过采样加平均（每 4 倍过采样约提升 1 bit）、差分输入、参考电压去耦|采样率要满足抗混叠要求，必要时加硬件低通','电位器与传感器采集、电流采样（配分流电阻）、电池电压监测。','只看 12 位分辨率就宣称精度 0.8mV 是错的，参考电压温漂、噪声、INL 与 DNL 都会吃掉有效精度。'],
+['bus','UART 串口','Universal Asynchronous Receiver-Transmitter','异步串行通信，双方约定波特率，靠起始位与停止位对齐，不需要时钟线。','帧格式：起始位、数据位（5 到 9）、可选校验、停止位，8N1 最常见|波特率误差需小于 2 到 3%，否则采样点漂移导致误码|点对点、全双工、没有地址概念，多机要么自定义协议要么改用 RS485|调试口、GPS 模块、蓝牙模块的主力接口','与上位机或模块通信、日志输出、GPS 与蓝牙模块。','「能收到数据就算通」是错觉：高波特率下时钟误差会变成偶发误码，要做误码率测试并看波形。'],
+['bus','I2C 总线','Inter-Integrated Circuit','两线（SCL 与 SDA）同步串行总线，支持多主多从，靠从机地址区分设备。','开漏输出加上拉电阻，7 位地址可扩展为 10 位；速率 100k、400k、1M 甚至 3.4M|时序要素：起始与停止条件、ACK 与 NACK、时钟延展（clock stretching）|总线电容上限约 400pF，挂太多设备或线太长波形会变差|多设备地址冲突时要改地址引脚或加 I2C 多路复用器','IMU、EEPROM、温湿度传感器、OLED 小屏、电源管理芯片配置。','从机在传输中被复位会把 SDA 一直拉低导致总线锁死，必须用 9 个时钟脉冲（或手动翻转 SCL）恢复总线。'],
+['bus','SPI 总线','Serial Peripheral Interface','四线（SCLK、MOSI、MISO、CS）同步串行，全双工、高速、无地址，靠片选区分从机。','速率常见几十 MHz，适合大批量与高速外设|四种模式由 CPOL 与 CPHA 决定，主从必须一致，否则数据整体错位|多从机用独立 CS 线或菊花链，CS 数量受 GPIO 限制|没有应答机制，可靠性全靠上层协议校验','Flash、SD 卡、LCD、高速 ADC、无线模块。','长线或高速下 MISO 反射与串扰明显，需要串联小电阻并保证地回流完整，不能像板上短线那样随便走。'],
+['bus','CAN 总线','Controller Area Network','差分两线、多主、广播式总线，靠 ID 仲裁与 CRC 保证车载通信的可靠性。','标准帧 11 位 ID，扩展帧 29 位 ID；速率 125k、250k、500k、1M|差分电平抗共模干扰，两端各 120 欧终端电阻匹配总线阻抗|非破坏性仲裁：ID 越小优先级越高，仲裁失败方自动退让并在总线空闲后重发|错误处理：错误计数加主动错误、被动错误、总线关闭三态','整车 ECU 通信、电机驱动器、BMS、底盘控制。','终端电阻只在总线两端各一个，中间节点加电阻会造成阻抗失配，通信时好时坏极难排查。'],
+['bus','CAN FD','CAN with Flexible Data-rate','CAN 的升级版，数据段可变速率（最高 5 到 8Mbps），单帧数据最长 64 字节。','仲裁段仍用低速保证兼容，数据段切高速（BRS 位），收发器必须支持|一帧最多 64 字节，大幅降低协议开销与总线负载|CRC 加强并含填充位计数，可靠性更高|与传统 CAN 节点混用时，老节点会因高速数据段报错，需要网关隔离','新车型域控、雷达与摄像头大数据量传输、OTA 刷写。','只改控制器配置不够，收发器、线束、终端匹配都要跟着升级，否则高速段误码率飙升。'],
+['bus','CAN 仲裁机制','Arbitration','多个节点同时发送时，靠 ID 逐位比较的线与逻辑实现无破坏仲裁。','显性位（0）压过隐性位（1）；发送隐性却读到显性的节点立即退出|ID 数值越小优先级越高，实时性靠 ID 规划保证|仲裁失败不丢数据，会在总线空闲后自动重发|总线负载超过 70% 后，低优先级报文的延迟抖动急剧增大','报文 ID 规划（安全相关报文分配小 ID）、实时性分析。','把高频日志类报文给了小 ID，会挤掉安全关键报文的时隙，这是典型的 ID 规划事故。'],
+['bus','RS485 与 Modbus','RS-485 / Modbus RTU','差分半双工总线，多点组网、抗干扰强、传输距离可达 1200m，Modbus 是其上最常见的应用层协议。','半双工两线（A、B），需要方向控制（DE 与 RE），主从轮询无冲突|终端电阻加偏置电阻保证空闲态电平确定|Modbus RTU 用功能码加寄存器地址访问，01、03、04、06、16 最常用|共模电压范围有限，长距离与强干扰需隔离收发器并处理地线','工业传感器、电表、变频器、PLC 组网。','多节点星形布线会破坏差分阻抗，RS485 必须手拉手（菊花链）走线，星形布线是最常见的现场错误。'],
+['bus','车载以太网与 TSN','Automotive Ethernet / TSN','单对双绞线（100BASE-T1、1000BASE-T1）的车载以太网，配合 TSN 提供确定性时延。','100BASE-T1 只用一对线，全双工，线束重量大幅下降；速率有 100M、1G、10G|TSN 关键标准：802.1AS 时间同步（gPTP）、802.1Qbv 时间感知整形、802.1Qav 信用整形|面向服务的通信（SOME/IP）替代信号导向的 CAN 矩阵|用于摄像头与激光雷达大数据量传输、域控之间的骨干网','智能驾驶域控与传感器之间、座舱域的高速链路。','「以太网带宽大就没有实时性问题」是误解：没有 TSN 整形时，突发流量会造成毫秒级排队抖动，对控制闭环是致命的。'],
+['bus','EtherCAT','EtherCAT','基于以太网的工业实时总线，从站用专用 ESC 芯片在帧经过时硬件级读写，实现微秒级同步。','主站发一帧遍历所有从站，从站在帧飞行中读写数据，无需逐站收发|分布式时钟 DC 可实现优于 100ns 的同步精度|拓扑灵活（线、树、环），支持热连接|周期可做到 100 微秒甚至更低，抖动极小','多轴伺服同步、机器人关节控制、高速 IO。','EtherCAT 的实时性依赖专用从站芯片与主站实时补丁，普通网卡加非实时系统跑不出标称性能。'],
+['bus','差分信号与终端电阻','Differential Signaling / Termination','用一对互补信号传输，接收端取差值，共模噪声被抵消。','差分对的共模抑制比决定抗干扰能力，前提是两根线走线对称|阻抗不连续会产生反射，终端电阻用于匹配（CAN 与 RS485 都是 120 欧）|差分对内等长等距、参考地完整是 PCB 设计铁律|单端信号在长线与高速下更易受串扰与地弹影响','CAN、RS485、以太网、USB、LVDS 的物理层设计。','差分不等于免疫干扰：走线不对称时差模噪声照样进来，还会转换成共模辐射，反过来恶化 EMI。'],
+['bus','I2C 死锁恢复','Bus Recovery','从机在传输中途被复位导致 SDA 持续拉低，主机无法产生起始条件的故障。','成因：主机复位或掉电、从机电源跌落、EMI 干扰造成时序错位|恢复：把 SCL 切成 GPIO 手动输出 9 个以上时钟直到 SDA 释放，再补一个 STOP|根治：加总线复位芯片、匹配上电时序、软件层加超时与重试|预防：每次 I2C 操作设超时，超时后执行总线恢复而不是死等','量产固件的健壮性设计、现场故障排查。','只加重试不做总线恢复，遇到真死锁会无限重试卡死。HAL 库默认的阻塞式 I2C 没有超时保护。'],
+
+['deploy','INT8 量化','Quantization','把 FP32 的权重与激活映射到 8 位整数，用 scale 与 zero_point 做线性近似，换取数倍加速与显存下降。','对称量化用于权重，非对称量化用于激活（保留零点以对齐 0）|PTQ 训练后量化快，但精度依赖校准集的代表性；QAT 量化感知训练在训练中模拟量化误差，精度更好|敏感层（首尾层、检测头、LayerNorm）常保留 FP16|收益：TensorRT 与昇腾上 INT8 通常是 FP16 的两倍吞吐，显存降一半','边缘端实时检测与分割，把模型塞进 Jetson 或 Atlas。','校准集与真实场景分布不一致时，量化掉点会集中在小目标与低照度这类长尾样本上，平均精度根本看不出来。'],
+['deploy','剪枝与蒸馏','Pruning / Knowledge Distillation','剪枝去掉冗余通道或权重，蒸馏用大模型（教师）的软标签指导小模型（学生）。','结构化剪枝（整通道）才能真正加速，非结构化稀疏在通用硬件上收益有限|蒸馏损失等于硬标签交叉熵加软标签 KL 散度，温度 T 调节软标签的平滑度|特征蒸馏（对齐中间层）通常比只蒸 logits 更有效|剪枝后必须微调恢复精度，剪枝率与精度是帕累托曲线','把服务器模型压到车端或嵌入式的算力预算内。','剪枝率高时精度断崖式下跌，而且不同硬件对稀疏支持差异极大，「理论 FLOPs 降了」不等于「实际变快」。'],
+['deploy','ONNX 与 TensorRT','ONNX / TensorRT','ONNX 是模型交换格式，TensorRT 是 NVIDIA 的推理优化引擎，负责图层融合、精度校准与 kernel 自动调优。','流程：PyTorch 导出 ONNX（opset 版本要对），再用 TensorRT 构建 engine|engine 与 GPU 型号、TRT 版本、最大 batch 与形状绑定，跨设备不可复用|动态 shape 需要设 optimization profile，否则要重建 engine|常见坑：不支持的算子需要 plugin 或改写；NMS 这类后处理放 CPU 还是 GPU 影响很大','Jetson、Orin 与服务器端的推理部署。','在 A 机器构建的 engine 拷到 B 机器可能直接崩或极慢，必须在目标机上构建。'],
+['deploy','昇腾 CANN 与 ATC','Ascend CANN / ATC','华为昇腾的软件栈，用 ATC 把模型转成离线 om 模型，由 AscendCL 在 NPU 上推理。','流程：PyTorch 到 ONNX，再用 ATC 指定 soc_version、输入 shape 与精度模式，产出 om|精度模式：fp32、fp16、allow_mix_precision、int8（需配量化校准）|图像预处理要配 AIPP，硬件编解码缩放走 DVPP，否则 CPU 预处理成为瓶颈|Atlas 200 DK 与 310B 用 AscendCL 管理内存与推理','国产化替代方案，Atlas 系列边缘设备部署。','忘记开 AIPP 或 DVPP，让 CPU 做 resize，会把整体延迟吃掉一半以上。部署优化常卡在预处理，不在模型。'],
+['deploy','算子融合','Operator Fusion','把多个相邻算子合并成一个 kernel，减少访存与启动开销。','常见融合：Conv 加 BN 加 ReLU、Add 加 LayerNorm、MatMul 加 Add|收益来自减少 HBM 的读写次数，是访存受限模型的主要加速手段|框架与编译器自动完成（TensorRT、TVM、XLA），也可手写融合算子|融合受内存布局与对齐约束，某些组合反而更慢','推理引擎优化、自定义算子开发。','只看 FLOPs 判断优化收益会失准，访存受限的层（逐元素运算、归一化）才是融合的主战场。'],
+['deploy','Roofline 模型','Roofline Model','用算力上限与带宽上限两条线界定 kernel 的性能天花板，判断是算力受限还是访存受限。','计算强度等于 FLOPs 除以传输字节数，低于拐点即为访存受限，此时堆算力无效|多数卷积与逐元素算子在边缘设备上是访存受限|优化方向不同：访存受限要减少数据搬运（融合、量化、复用），算力受限要减少计算量（剪枝、低秩）|实测用 profiling 工具看带宽利用率与 MAC 利用率','性能瓶颈定位、部署方案选型、算力预算评估。','「TOPS 高就一定快」是外行判断：标称 TOPS 是峰值，实际吞吐受带宽、算子支持度与调度开销共同限制。'],
+['ros2','ROS 2 架构与 DDS','ROS 2 / DDS','分布式机器人中间件，节点通过 DDS 以话题、服务、动作三种模式通信，没有中心 master。','底层用 DDS（FastDDS 或 CycloneDDS）做自动发现与 QoS 协商，天然分布式|通信模式：话题是异步流，服务是同步请求响应，动作是长任务带反馈与取消|生命周期节点（managed node）便于状态管理与故障恢复|支持多机、实时（配 RT 内核）与安全（SROS2）','机器人或无人车的感知到决策到控制软件架构，小型 ROS 2 底盘也用这套。','默认 DDS 在多机与大流量时会出现发现风暴与丢包，需要调 QoS、限制网卡、拆分 domain，不是装上就能用。'],
+['ros2','ROS 2 QoS','Quality of Service','一组描述可靠性、时效性与持久性的策略，决定通信双方能否匹配以及丢包行为。','Reliability：RELIABLE 会重传（TCP 风格），BEST_EFFORT 丢了就丢（UDP 风格）|Durability：VOLATILE 与 TRANSIENT_LOCAL（给后加入的订阅者补发历史）|History：KEEP_LAST 的深度决定队列长度，传感器数据常用 1 只取最新|双方 QoS 不兼容时不会报错，而是静默收不到数据，这是排查大坑','高频点云与图像用 BEST_EFFORT 加 depth 1，控制指令用 RELIABLE。','传感器数据设成 RELIABLE 且队列很深，会导致延迟持续累积（越跑越滞后），实时系统必须主动丢旧帧。'],
+['deploy','推理延迟与吞吐','Latency vs Throughput','延迟是单次端到端耗时，吞吐是单位时间处理量，两者常此消彼长。','batch 增大会提升吞吐但抬高单帧延迟，实时系统通常 batch 等于 1|端到端延迟等于采集加传输加预处理加推理加后处理加下发，模型只占其中一部分|流水线并行（多流、多线程）能提升吞吐而基本不增加延迟|控制闭环对延迟的抖动（jitter）比对绝对值更敏感','实时感知系统设计、算力预算分配。','只优化模型推理时间而忽略预处理与后处理，通常只能拿到端到端收益的 30% 到 50%。'],
+['deploy','TOPS 的陷阱','TOPS Caveats','TOPS 是理论峰值算力，且各厂商口径不同（INT8 还是 INT4、含不含稀疏），与实际可用算力差很远。','稀疏算力常被标成两倍，而实际模型未必稀疏|有效算力受内存带宽、算子覆盖率与调度效率限制，实际利用率常在 20% 到 50%|不同厂商口径不可直接横向比较|评估要看目标模型在目标设备上的实测帧率与功耗','硬件选型、方案答辩、算力预算。','拿厂商标称 TOPS 做横向对比是新手错误，同 TOPS 的两块板实测可能差两到三倍。'],
+
+['auto','ISO 26262 与 ASIL','Functional Safety / ASIL','道路车辆功能安全标准，按危害事件的严重度、暴露率、可控性定出 ASIL A 到 D 等级并规定开发流程。','ASIL 由 S（严重度 S0 到 S3）、E（暴露率 E0 到 E4）、C（可控性 C0 到 C3）组合确定|等级越高要求越严：硬件失效率指标（SPFM 与 LFM）、开发流程、验证与确认|ASIL 分解：一个高等级需求可拆成两个独立的低等级实现|QM 表示无功能安全要求，但仍要走标准的质量流程','域控与 ECU 开发、感知算法的安全论证、供应商准入。','ASIL 是「危害事件」的属性而不是「零件」的属性，同一个 ECU 的不同功能可以有不同 ASIL。'],
+['auto','SOTIF','ISO 21448 预期功能安全','处理「系统没坏但设计不足」导致的不合理风险，主要针对感知与算法。','触发条件导致功能不足，进而产生危害行为，是分析主线|分四象限：已知安全、已知不安全、未知不安全、未知安全，工作就是把后两者往前两者搬|手段：场景库、仿真、影子模式、限定运行域 ODD、驾驶员监控|与 26262 互补：26262 管失效，21448 管性能局限','智能驾驶感知与决策的安全论证，L2+ 与 L3 准入的必答项。','感知的漏检不属于 26262 的随机硬件失效，用 26262 的方法论去论证它是张冠李戴。'],
+['auto','AUTOSAR CP 与 AP','AUTOSAR Classic / Adaptive','汽车开放系统架构，Classic Platform 面向深嵌入式实时 ECU，Adaptive Platform 面向高性能 POSIX 计算平台。','CP：静态配置、OSEK 风格 OS、RTE 抽象层、BSW 分层（MCAL、ECU 抽象、服务层），强实时、资源受限|AP：基于 POSIX 加 C++14 与 C++17，面向服务（ara::com），支持动态部署与 OTA，跑在高算力 SoC|两者通过 SOME/IP 或信号网关互通|价值在于让不同供应商的软件可集成、可复用、可移植','域控与 ECU 的软件架构、量产项目的软件分层规范。','AP 不是 CP 的升级版而是另一条赛道：硬实时控制仍归 CP，AP 处理不了微秒级闭环。'],
+['auto','FMEA','Failure Mode and Effects Analysis','自下而上枚举「怎么坏、什么后果、多严重、多难发现」，输出改进优先级。','分 DFMEA（设计）与 PFMEA（过程）；核心是 S 严重度、O 发生度、D 探测度三因子|RPN 等于三者相乘，但现代做法更强调 S 与行动优先级 AP，因为 RPN 会掩盖高严重度问题|必须随设计变更同步迭代，不是一次性文档|与 FTA（自上而下的故障树）互补使用','硬件与结构设计评审、工艺过程控制、质量体系审核。','RPN 一刀切（比如大于 100 才改）会漏掉「严重度高但发生度低」的问题，S 高的项必须无条件关注。'],
+['auto','8D 报告','Eight Disciplines','八步问题解决法，从组建团队到防止再发生，是制造业处理客户投诉的标准格式。','D1 组建团队，D2 描述问题，D3 临时遏制，D4 根本原因，D5 永久措施，D6 实施验证，D7 预防再发，D8 团队认可|D3 与 D4 的区别：先止血再治病，很多人会跳过 D3|根因要分「发生根因」与「流出根因」，后者决定检验环节怎么改|闭环证据：验证数据加修订后的文件编号','客诉处理、量产质量问题、供应商质量管理。','把 8D 写成「原因：员工疏忽；措施：加强培训」等于没做。根因必须落到系统、设计或工艺的可验证改动上。'],
+['auto','SPC 与 Cpk','Statistical Process Control','用控制图区分正常波动与异常波动，用 Cpk 衡量过程能力。','控制图（Xbar-R、I-MR）的判异准则看趋势、连续点、超出正负 3 sigma|Cp 只看离散度（要求过程中心与规格中心重合），Cpk 同时考虑偏移|Cpk 大于等于 1.33 是常见量产门槛，关键特性要求 1.67|前提是过程稳定且数据近似正态，非正态要换方法','量产尺寸与性能特性的过程监控、供应商能力评估。','过程不受控（有异常点）时算出的 Cpk 没有意义，顺序是：先判稳，再算能力。'],
+['auto','MSA 与 GR&R','Measurement System Analysis','评估量具的重复性（同一人多次）与再现性（不同人之间）占总变差的比重。','GR&R 占比小于 10% 可接受，10% 到 30% 有条件接受，大于 30% 不可用|分辨力不足（量具精度低于公差的十分之一）是一切问题的根源|还要看偏倚、线性与稳定性|测量系统吃掉太多变差，会让你把好件判坏、坏件判好','上线前的量具验收、质量问题排查（先确认是不是测量问题）。','数据「时好时坏」先怀疑工艺，其实一半概率是量具、夹具或操作手法的问题。MSA 要在 SPC 之前做。'],
+['auto','IP 防护等级','IEC 60529 Ingress Protection','防尘防水等级，第一位 0 到 6 防固体，第二位 0 到 8 防水。','IP67 表示完全防尘加短时浸水（1m、30 分钟）；IP68 的浸水条件由厂商标称|IP69K 是高压高温喷水，用于冲洗场景，与 IP68 不是包含关系|密封靠 O 圈、密封胶与透气阀（防水但透气，防凝露）|防护等级与散热是矛盾的：全密封无法对流散热，只能靠壳体导热','户外传感器与整机结构设计、可靠性验证（淋雨与浸水试验）。','IP 等级是新鲜试样的实验室结果，老化、装配公差、线缆出口才是实际进水的真正入口。'],
+['auto','EMC 与 EMI','Electromagnetic Compatibility','电磁兼容等于自己不干扰别人（EMI）加不被别人干扰（EMS），三要素是源、耦合路径、敏感体。','传导骚扰在 150kHz 到 30MHz 走线缆，辐射骚扰在 30MHz 以上走空间|抑制手段分三路：源头（降低 dv/dt、展频、缓冲）、路径（滤波、屏蔽、接地）、受体（TVS、共模电感）|共模与差模要分开治：共模走 Y 电容与共模电感，差模走 X 电容|整车与整机要过 CISPR 25、ISO 11452、GB 18655 等标准','车载电子设计、传感器线束布置、产品认证。','EMC 问题九成出在「地」和「线束」上，改电路板之前先查回流路径与线束走向，能省下大量试错。'],
+['auto','LDO 与 DCDC','LDO vs Switching Regulator','LDO 线性降压无开关噪声但效率低，DCDC 开关降压效率高但有纹波与 EMI。','LDO 效率约等于 Vout 除以 Vin，压差大时发热严重（功耗等于压差乘电流）|DCDC 效率 85% 到 95%，但需要电感电容，存在开关纹波与辐射|噪声敏感电路（ADC 基准、射频、模拟前端）常用 LDO 后级供电，前级用 DCDC 降压|LDO 的 PSRR 随频率下降，高频抑制能力有限','传感器与模拟电路供电、电池设备的电源架构（DCDC 粗降加 LDO 精滤）。','「DCDC 噪声大所以全用 LDO」在电池设备上会因效率低直接烧掉续航与温升预算，要看压差决定。'],
+
+['ml','过拟合与正则化','Overfitting / Regularization','模型在训练集表现好、在新数据上变差，本质是学到了噪声而不是规律。','判断：训练 loss 下降但验证 loss 上升；数据量、模型容量、正则强度三者要匹配|手段：L2 权重衰减、Dropout、数据增强、早停、BatchNorm、减小模型容量|数据增强对视觉任务性价比最高，通常比调正则系数更有效|正则过强会欠拟合，表现为训练集都学不好','训练调参、小样本场景、部署前的泛化评估。','用测试集反复调超参会把测试集「训练」掉，必须保留独立验证集，最终指标只在测试集看一次。'],
+['ml','BN 与 LN','Batch Norm / Layer Norm','BN 在 batch 维归一化，LN 在特征维归一化，都是为了让各层输入分布稳定、训练更稳更快。','BN 对每个通道在 (N,H,W) 上算均值方差；训练用 batch 统计、推理用滑动平均，batch 小时统计不稳|LN 对单个样本的所有通道归一化，与 batch 无关，适合序列与 Transformer 以及小 batch|BN 有正则效果（batch 噪声），LN 没有|检测任务用 batch 等于 1 时 BN 统计偏差会明显掉点，需 SyncBN 或改 GN 与 LN','训练稳定性、小 batch 部署、Transformer 结构。','推理时忘记切 eval 模式（BN 仍用 batch 统计）是部署掉点的经典 bug，导出 ONNX 时要专门检查。'],
+['ml','注意力机制','Self-Attention','用 query 与 key 的相似度算权重，对 value 加权求和，实现内容自适应的全局信息聚合。','缩放点积注意力：softmax(QK 转置除以根号 d) 乘 V，除根号 d 是为了防止点积过大导致梯度消失|多头注意力在不同子空间学不同的关系|复杂度是序列长度的平方，长序列的瓶颈，催生了稀疏、线性、窗口注意力|位置编码（正弦、可学习、RoPE）补回注意力本身的无序性','Transformer 检测（DETR）、BEV 融合、点云与多模态对齐。','DETR 类模型收敛慢是匹配不稳定导致的，需要匈牙利匹配加更多 epoch，不是简单调学习率能解决。'],
+['ml','IoU、NMS 与 mAP','IoU / NMS / mAP','IoU 衡量预测框与真值框的重叠度，NMS 去除重复框，mAP 是不同阈值下 PR 曲线面积的均值。','IoU 等于交集除以并集；检测常用阈值 0.5（AP50）与 0.5 到 0.95 步长 0.05（COCO AP）|NMS 按置信度排序，抑制 IoU 超阈值的低分框；Soft-NMS 用衰减代替删除|密集场景 NMS 会误杀相邻目标，需要 Soft-NMS、可学习 NMS 或一对一匹配|mAP 是类别平均后的 AP 均值，必须声明 IoU 阈值与面积范围才有意义','检测模型评估、部署后精度对齐、竞品对比。','只报 AP50 会掩盖定位精度问题：两个模型 AP50 相同，AP75 可能差十个点。'],
+['ml','长尾与数据不平衡','Long-Tail / Class Imbalance','少数类别样本极少，模型被多数类主导，长尾类召回极差。','手段：重采样（过采样少数类、欠采样多数类）、类别加权损失、Focal Loss|重采样会改变先验分布，需配阈值调整或 logit 校正|长尾在大规模检测里很常见（罕见车型、特殊工况）|评价要看每类 AP 与混淆矩阵，不能只看 mAP','感知模型的类别均衡、罕见障碍物（异形车、动物）检测。','Focal Loss 与类别加权同时用会过度补偿，导致多数类精度明显下降而 mAP 反而没涨。'],
+['ml','域偏移','Domain Shift / Domain Gap','训练数据分布与部署场景分布不一致，导致线下指标好、上车就掉点。','来源：光照、天气、地域、传感器型号、安装角度、标定差异|表现：置信度整体偏移，特定场景（逆光、雨夜）集中失效|手段：域自适应（对抗、伪标签、风格迁移）、数据闭环（影子模式回采）、在线标定|最有效的往往不是算法，而是把真实场景的数据挖回来重训','模型从实验室到量产的最后一公里。','用同一批数据划分训练与测试，指标会虚高且完全掩盖域偏移。必须按场景、地点、时间切分。'],
+['ml','自监督与对比学习','Self-Supervised / Contrastive Learning','不用人工标注，靠构造正负样本对，拉近正样本、推远负样本，从而学习通用表征。','InfoNCE 损失加温度系数，负样本数量决定效果（MoCo 用队列扩大负样本）|数据增强就是正样本构造，增强策略必须保留语义（裁剪过猛会让正样本失真）|BYOL 与 SimSiam 去掉负样本，靠停止梯度与预测头防止坍缩|预训练加少量标注微调，是小样本场景的性价比路线','无标注工业、遥感、车载数据的预训练，长尾类冷启动。','对比学习学的是「增强不变性」：增强里若含颜色抖动，模型对颜色判别任务就会变差。增强要与下游任务对齐。'],
+['ml','交叉熵与标签平滑','Cross-Entropy / Label Smoothing','交叉熵衡量预测分布与真实分布的差异，标签平滑把硬 0 与 1 的标签软化，抑制过拟合。','交叉熵等于负的 sum(y log p)，配合 softmax；相比 MSE 梯度更适合分类|标签平滑：真实类为 1 减 ε，其余类各为 ε 除以 (K 减 1)，抑制过度自信、改善校准|蒸馏里的温度 T 也是软化标签的另一种形式|类别不平衡时交叉熵会被多数类主导，需要加权','分类与检测分类头的损失设计。','标签平滑会整体降低模型置信度，如果后处理阈值是按未平滑模型调的，会出现大量漏检，必须重新标定阈值。'],
+['ml','学习率调度','Learning Rate Schedule','学习率决定每次更新的步长，warmup 加余弦或阶梯衰减是让训练稳定收敛的关键技巧。','Warmup 避免训练初期大梯度破坏参数，Transformer 几乎必需|余弦退火加重启（SGDR）有利于跳出局部极小|学习率过大表现为 loss 震荡甚至 NaN，过小则收敛慢或卡在次优|配合 batch size 缩放规则（线性或平方根）与梯度裁剪','训练稳定性、复现论文结果、迁移学习微调。','微调预训练模型时用与从头训练相同的学习率，会直接把预训练特征「洗掉」，这是最贵的低级错误之一。'],
+['ml','Transformer 与 DETR','Transformer / DETR','全注意力架构，DETR 用一组可学习 query 直接输出检测结果，去掉 NMS。','编码器做全局建模，解码器用 query 与图像特征做交叉注意力|去掉 anchor 与 NMS，端到端输出集合预测，需匈牙利匹配|收敛慢（原论文 500 epoch），Deformable DETR 用稀疏采样加速收敛|在 BEV 与多模态融合中作为统一的特征交互骨架','端到端检测、BEV 融合、时序融合。','DETR 的「无 NMS」不代表无后处理，输出仍需按置信度过滤；密集小目标上不如 anchor-based 系列成熟。'],
+
+['embodied','VLA 模型','Vision-Language-Action Model','把视觉输入、语言指令与动作输出放进同一个模型，端到端输出机器人动作序列。','典型结构是视觉编码器加大语言模型主干加动作解码头（离散 token 或连续回归或 diffusion）|用大规模机器人示教数据与图文数据联合预训练，再用少量任务数据微调（RT-2、OpenVLA、pi0 是代表性工作）|动作表示有几种：离散化 token、动作分块（action chunk）、扩散或流匹配生成连续轨迹|评测看任务成功率，以及泛化到新物体、新指令的能力','用自然语言指挥机械臂或人形完成长程任务，替代一任务一策略的传统写法。','demo 视频里的成功率是挑过的。真实场景的瓶颈常在抓取精度与推理延迟上：几 Hz 的控制频率撑不起精细操作。'],
+['embodied','模仿学习与行为克隆','Imitation Learning / Behavior Cloning','直接拟合专家示教数据里的观测到动作映射，不做奖励建模。','本质是监督学习，损失常用 MSE 或动作 token 的交叉熵|分布漂移：一旦偏离专家轨迹，误差会累积放大，因为它没学过错了怎么救|缓解手段：DAgger（让专家标注自己的失败状态）、action chunk、扩散策略|数据质量比数量重要，示教的平滑度与一致性直接决定上限','机械臂抓取、装配、灵巧手操作的快速冷启动。','只采成功示教一定学不会纠错；必须刻意采一部分接近失败但被救回来的轨迹。'],
+['embodied','Sim2Real 差距','Sim-to-Real Gap','仿真里训好的策略搬到真机上性能骤降，源于物理参数、传感与视觉的分布差异。','三类来源：动力学（摩擦、质量、间隙）、感知（渲染真实感、噪声）、时延与控制频率|手段：域随机化、系统辨识、真实数据微调、渲染增强|域随机化不是越大越好，过宽会让策略学成万能但都不精|能用真实数据微调就优先微调，别硬调仿真参数','强化学习训练、灵巧手与足式机器人的策略迁移。','只随机化视觉不管动力学，Sim2Real 会退化成「换个灯光就崩」；反过来只随机化动力学、视觉不真实同样会崩。'],
+['embodied','A* 与 RRT 路径规划','A* / RRT*','A* 在栅格图上用启发式搜索求最短路径；RRT 系靠随机采样在高维空间里快速找到可行解。','A* 的代价 f 等于 g 加 h，h 必须可采纳（不高估），否则丢最优性|RRT* 通过重连（rewire）渐进最优，代价是收敛慢|RRT 系在窄通道与高维关节空间有效，但路径不平滑，需要后处理|工程上常分层：全局 A* 或 Dijkstra，加局部 TEB 或 DWA','移动机器人导航、机械臂避障运动规划。','A* 的启发式一旦写错（比如允许斜穿障碍），出来的就是非法路径；RRT 单次采样随机，同场景两次结果可能差很多。'],
+['embodied','模型预测控制 MPC','Model Predictive Control','每步用系统模型向前预测一段时域，求解带约束的最优控制序列，只执行第一个控制量。','三要素：预测模型、滚动优化、反馈校正；约束（速度、加速度、转角）显式写进优化问题|比 PID 强在能处理多变量耦合与约束，代价是每个周期都要解一次优化|实时性靠缩短时域、线性化、热启动与 OSQP 这类专用求解器|与规划的分工：规划给参考轨迹，MPC 负责跟踪与约束满足','车辆轨迹跟踪、足式机器人步态、机械臂力位混合控制。','预测时域太短会短视导致抖动，太长解不出来；模型不准时约束会失效，看着很聪明其实在赌。'],
+['embodied','TEB 局部规划','Timed Elastic Band','把轨迹表示成一条弹性带，靠优化位姿序列同时满足避障、速度与运动学约束。','目标函数等于避障项加时间最优项加运动学可行性项加与全局路径的贴合项|输出直接是可执行的线速度与角速度序列，与差速、全向底盘契合|参数（膨胀半径、各项权重）极多，调参是最费力的一环|相比 DWA 更平滑、更能处理狭窄通道，但计算更重','ROS 2 Nav2 的局部规划器，室内移动机器人与 AGV。','局部规划再好也救不了坏的全局路径；机器人在门口反复横跳，通常是膨胀层与 footprint 配置不匹配。'],
+['embodied','行为树','Behavior Tree','用 Selector、Sequence、Decorator 等节点组合出可复用的任务逻辑，替代硬编码的状态转移。','与状态机相比更模块化、可组合、可视化调试好，加一个行为不必改所有分支|节点返回成功、失败、运行中三态，tick 从根节点向下传播|常见装饰器：Retry、Timeout、Inverter、Condition|与规划器配合：树决定做什么，规划器决定怎么去','机器人任务编排、多步骤作业流程、故障恢复策略。','行为树不解决并发与时序问题。多个并行动作的资源竞争要靠黑板和显式同步设计，否则会出现同时开两个夹爪这类 bug。'],
+['embodied','阻抗控制与导纳控制','Impedance / Admittance Control','不直接控位置，而是控制位置偏差与力之间的关系，让机器人像弹簧一样柔顺地接触环境。','阻抗控制给定质量、阻尼、刚度参数，输出力随位移偏差变化；导纳控制检测外力后反算位置修正|力控必须有力矩传感或关节电流估计，否则只能靠位置误差假装|装配、打磨、插拔这类接触任务，纯位置控制一定会顶死|稳定性受环境刚度与采样延迟影响，增益过大直接震荡','精密装配、抛光打磨、人机协作的安全接触。','阻抗参数不是越软越好：太软会推不动，太硬等于没有柔顺性。接触瞬间的冲击才是稳定性最容易崩的时刻。'],
+['embodied','正逆运动学与雅可比','Forward / Inverse Kinematics, Jacobian','正解由关节角算末端位姿，逆解由末端位姿反推关节角；雅可比把关节速度映射为末端速度。','逆解有解析法与数值法（牛顿迭代、阻尼最小二乘），六轴以上通常没有解析解|奇异点：雅可比降秩，末端在某方向失去运动能力，逆解会给出巨大的关节速度|冗余机械臂用零空间优化处理次要目标（避障、关节限位）|雅可比同时用于力映射：关节力矩等于雅可比转置乘末端力','机械臂轨迹生成、视觉伺服、拖动示教。','不做奇异点处理，接近奇异时关节会突然高速甩动，这是实验室炸机的主要原因之一。'],
+['embodied','物理仿真 MuJoCo 与 Isaac Sim','Physics Simulation','提供刚体与软体动力学以及传感器模拟的训练环境，是强化学习与 Sim2Real 的基础设施。','MuJoCo 接触求解精度高、速度快，适合控制与 RL 研究；Isaac Sim 基于 GPU 并行，可同时跑上千环境|并行环境数是 RL 样本效率的关键，单环境训练基本不可行|渲染真实感决定视觉策略能否迁移，域随机化叠加在其上|仿真时间与真实时间的比值直接影响训练成本估算','足式与人形步态训练、灵巧手操作、策略预训练。','仿真里的接触永远比真实干净，刚性接触模型学出来的抓取在真机上常因摩擦与形变失败。'],
+['embodied','抓取位姿估计','Grasp Pose Estimation','从点云或 RGB-D 直接预测夹爪该在哪里、以什么姿态闭合。','主流两类：采样评估（GraspNet 系列先生成候选再打分）与直接回归（端到端出位姿）|评价用成功率与力闭合度量，不是简单的位姿误差|已知物体走模型匹配（6D 位姿估计），未知物体只能靠几何启发式|透明、反光、柔性物体的深度缺失是主要失效来源','无序抓取（bin picking）、物流分拣、家庭服务机器人。','抓取位姿正确不代表能抓起来：碰撞检测漏掉夹爪本体与桌面、来料姿态超出工作空间，都会在真机上失败。'],
+['embodied','数据闭环与失败回采','Data Flywheel','把真机部署中的失败案例回采、标注、再训练，形成持续提升的闭环。','环节：影子模式记录，失败自动挖掘（低置信度、人工接管、任务超时），标注或重放，增量训练，灰度上线|数据配比比数据量更关键：成功、失败、纠错三类必须都有|要解决重放一致性：同一段轨迹在不同硬件上能否复现|评价闭环是否有效，看同类失败在下一版是否下降','机器人产品的长期迭代，规模化部署的前提。','只堆成功示教会让模型越来越自信、也越来越脆。真正的信息量在失败样本里。'],
+['embodied','动作分块','Action Chunking','让策略一次预测未来若干步动作，而不是只预测下一步，以减少误差累积。','动机：单步预测的误差会逐步累积，且高频推理带来时延抖动|ACT（Action Chunk Transformer）一次输出 k 步动作，用时间集成做平滑拼接|代价是反应变慢：块越长，对突发变化的响应越迟，通常取 10 到 100 步|与扩散策略结合可缓解块边界处的动作不连续','机械臂精细操作、灵巧手示教学习，尤其适合推理频率只有几 Hz 的边缘部署。','块太长会让机器人对突发干扰响应迟钝，块太短则退化成单步预测失去意义。这个 k 必须按控制频率与任务动态特性一起定。'],
+
+['quant','Alpha 因子','Alpha Factor','能对未来收益有预测能力的可量化特征，是量化策略的原料。','三类：量价（动量、反转、波动）、基本面（估值、盈利质量）、另类（舆情、卫星、供应链）|评价看 IC（与未来收益的秩相关）、ICIR（稳定性）、换手率与衰减速度|因子必须做行业与市值中性化，否则赚的是风格 Beta 不是 Alpha|因子拥挤度决定它还有没有效，公开因子容易被套利掉','多因子选股、因子合成与组合优化。','IC 高不等于能赚钱：换手率过高时交易成本会吃掉全部超额收益，必须算扣费后的净值。'],
+['quant','夏普比率与信息比率','Sharpe / Information Ratio','夏普比率衡量单位总风险的超额收益，信息比率衡量单位跟踪误差的超额收益。','夏普等于（年化收益减无风险利率）除以年化波动率；信息比率等于超额收益除以跟踪误差|夏普对收益分布的正态假设敏感，尖峰厚尾时会被高估|高频策略的夏普天然更高，跨策略比较要在同频同周期下做|必须看样本长度，短样本的夏普没有统计意义','策略评价、产品路演、策略间横向比较。','用日频收益乘根号 252 年化是常规做法，但策略持仓重叠导致收益自相关时，会系统性高估夏普。'],
+['quant','最大回撤与卡玛比率','Max Drawdown / Calmar Ratio','最大回撤是净值从峰值到谷底的最大跌幅，卡玛比率用年化收益除以最大回撤。','回撤是资金曲线层面的风险，直接决定能不能扛住不赎回|卡玛比率比夏普更贴近实盘体验，因为它惩罚尾部|要区分回撤的深度与持续时间（水下期），两者都影响持仓信心|杠杆会等比放大回撤，爆仓线决定可承受的最大回撤','策略风险预算、产品设计与客户沟通。','回测回撤看着温和，往往是因为样本里没包含极端行情。补一段历史压力区间再看会诚实很多。'],
+['quant','滑点与市场冲击','Slippage / Market Impact','滑点是成交价与预期价的差，市场冲击是自己的订单把价格推走。','冲击成本随下单量占日均成交量的比例非线性上升，常用平方根模型近似|拆单（TWAP、VWAP、POV、Iceberg）在冲击与择时风险之间权衡|小市值与低流动性标的的滑点可能吃掉全部 Alpha|回测必须建模滑点，否则高换手策略的净值全是假的','策略容量评估、交易执行算法设计。','用收盘价成交回测等于假设零滑点零冲击，这是回测虚高最常见的原因。'],
+['quant','前视偏差','Look-ahead Bias','回测中不小心用到了当时还不可能知道的信息，导致结果虚高且不可复现。','典型来源：财务数据用了公告日而非报告期、指数成分股用了当前名单、复权因子用了未来数据、日内信号却用收盘价成交|财报数据必须按公告日对齐，并留出滞后|退市股票必须保留在样本里，否则就是幸存者偏差|时区与交易日历错配也会引入隐性前视','回测框架设计、数据清洗规则。','前视偏差不会报错，只会让曲线变漂亮。唯一可靠的办法是逐字段核对「这个值在该时点是否可获得」。'],
+['quant','回测过拟合','Backtest Overfitting','反复调参直到回测好看，本质是把噪声拟合成了规律。','参数越多、尝试次数越多，过拟合越严重（多重检验问题）|手段：样本外验证、滚动前推（walk-forward）、参数稳健性（邻域不能崩）、降低策略复杂度|看参数曲面：真信号是平的，过拟合是尖的|必须记录尝试了多少次，只看最终那一次等于自欺','策略研发流程、上线前的准入评审。','用同一段数据既选因子又定参数，等于把样本外也用掉了。必须留一段从没碰过的数据做最终验证。'],
+['quant','统计套利与配对交易','Statistical Arbitrage / Pairs Trading','找价格协整的两个或多个标的，价差偏离均值时反向建仓，等回归时平仓。','前提是协整关系稳定，用 ADF 检验与半衰期衡量回归速度|价差用 z-score 触发，进出场阈值与止损要一起设计|风险在于关系断裂：基本面变化会让价差永久偏离|配对筛选的候选数量决定多重检验风险','股票配对、ETF 与成分股、跨期跨市场套利。','历史协整不代表未来协整。不做结构断点检验，一定会遇到越亏越加仓的价值陷阱。'],
+['quant','订单簿与延迟敏感性','Order Book / Latency Sensitivity','订单簿记录各价位的买卖挂单量，是做市与高频策略的核心数据结构；延迟决定你能拿到哪一档。','关键量：盘口不平衡（买卖挂单量差）、微价格（microprice）、订单流不平衡 OFI|做市赚的是价差，本质是提供流动性并管理库存风险|延迟从毫秒级（普通柜台）到微秒级（托管加 FPGA），每降一个量级成本翻几倍|高频收益对延迟极度敏感，同样的信号慢 1ms 就是亏','做市策略、短周期信号、交易系统选型。','在公网环境做毫秒级策略，先算清延迟抖动而不是平均值：平均 5ms 但抖动 50ms，策略照样亏。'],
+['quant','换手率约束','Turnover Constraint','限制组合每期调仓的比例，用来控制交易成本对超额收益的侵蚀。','换手率等于单期成交额除以组合总值，日频策略常见 10% 到 50%|组合优化里加换手惩罚项，等价于在收益与成本之间取平衡|高换手策略的容量受限于标的流动性，小市值尤其明显|评价必须看扣费后净值，不是毛收益','多因子组合优化、策略容量评估、交易成本预算。','只按手续费估算成本会严重低估：真实成本主要来自冲击成本，且随下单量占日均成交量的比例非线性上升。'],
+
+['ros2','TF2 坐标变换树','TF2 Transform Tree','ROS 2 里管理所有坐标系之间变换关系的时间缓冲树，任意两个 frame 都能查到某一时刻的相对位姿。','结构是树，每个 frame 只能有一个父节点；移动机器人标准链是 map 到 odom 到 base_link 到各传感器|查询必须带时间戳，TF2 会做时间插值；请求时刻超出缓冲（默认 10 秒）就报 extrapolation 错误|固定外参用 static_transform_publisher 发布，动态变换由里程计与定位节点发布|多传感器融合的正确做法是把外参写进 TF 树，而不是在算法代码里硬编码矩阵','把不同传感器数据统一到同一坐标系、机械臂末端位姿求解、多机协同定位。','把外参硬编码在代码里、TF 树里又配一份不一致的值，是最难查的一类 bug。两种来源同时存在时，先统一到 TF 单点。','岗位高频表述：熟悉 TF 坐标变换，能独立完成多传感器外参标定与坐标对齐。面试会追问 map 和 odom 为什么要拆成两层。'],
+['ros2','执行器与回调组','Executor / Callback Group','Executor 决定回调怎么被调度，Callback Group 决定哪些回调可以并发、哪些必须互斥。','默认 SingleThreadedExecutor 串行执行所有回调，一个耗时回调会阻塞整条链路|MultiThreadedExecutor 配 MutuallyExclusiveCallbackGroup（互斥）或 ReentrantCallbackGroup（可重入）控制并发粒度|同一节点里高频话题与低频服务混跑，不分组就会出现服务卡住话题|互斥组之间互相等待是死锁高发区','机器人软件集成、感知与控制节点共存时的实时性调优。','给所有回调都设 Reentrant 并不会变快，反而让共享状态失去保护。分组要考虑的是数据竞争，不是吞吐量。','岗位常见追问：节点为什么卡顿、为什么服务响应要等两秒。这是 ROS 2 相对 ROS 1 新增、也最容易踩的运行时机制。'],
+['ros2','ros2_control 控制框架','ros2_control','ROS 2 的硬件抽象与控制框架，把硬件驱动和控制算法用标准接口解耦。','三层结构：hardware_interface（真实或仿真硬件）到 controller_manager（加载与切换控制器）到 controller（joint_trajectory、diff_drive 等）|控制器支持热切换，切换时做插值以避免跳变|实时性靠 read、update、write 循环，周期抖动必须严格控制|仿真与实机共用同一套控制器，只替换 hardware 插件','机械臂关节控制、移动底盘驱动、需要仿真与实机一致性的项目。','在控制周期里做动态内存分配、打印日志、调用服务，是实时循环失效的头号原因。这些操作必须挪出 update 函数。','机械臂与底盘岗位的常见硬性要求：有 ros2_control 或 MoveIt 使用经验。'],
+['ros2','Nav2 导航栈','ROS 2 Navigation2','ROS 2 的导航框架，把定位、全局规划、局部控制与行为恢复串成一棵可配置的行为树。','组件：map_server 与 AMCL、planner_server（NavFn 或 Smac）、controller_server（TEB 或 DWB）、behavior_server、bt_navigator|用行为树编排导航流程，失败时按顺序尝试恢复行为（清代价地图、原地旋转、退避）|代价地图分层：static、obstacle、voxel、inflation，参数决定机器人在多远处开始避障|footprint 与 inflation_radius 必须与真实车体尺寸一致','室内移动机器人、AGV、巡检机器人的自主导航。','导航失败九成不是规划器的问题，而是代价地图、TF 或定位漂移。先看 costmap 可视化，再改参数。','岗位高频要求：熟悉 Nav2 或 move_base，能做参数调优与导航异常定位。'],
+['ros2','DDS 域与发现机制','DDS Domain / Discovery','ROS 2 底层用 DDS，节点通过组播自动发现同域内的其他节点，不需要 master。','ROS_DOMAIN_ID 隔离不同域，只有同域才能互相发现；多机与多项目共存时必须分开|发现默认靠组播，也可用 Discovery Server，后者更适合大规模与受限网络|默认配置下所有话题全局可见，多台设备同时上电会互相串数据|大流量时会出现发现风暴与资源占用，需要限制网卡、调整 participant 数量','多机器人协同、车队部署、实验室多台设备共用网络。','两台设备都用默认 DOMAIN_ID 0 做测试，会莫名收到对方话题。这种幽灵数据极难排查，第一件事就是查域号。','多机项目的面试题：多台设备同时运行怎么避免话题互相干扰。标准答案就是域隔离。'],
+['ros2','消息接口 msg 与 srv 与 action','ROS 2 Interface','ROS 2 用 IDL 定义强类型接口：msg 描述话题、srv 描述请求响应、action 描述带反馈的长任务。','action 由 goal、result、feedback 三部分组成，天然支持取消与进度上报，适合导航、抓取这类长任务|自定义接口要建独立的 interface 包，改动后所有依赖方都要重新编译|接口即契约，字段语义必须写注释，否则跨团队集成一定踩坑|序列化方式与 QoS 影响带宽，图像与点云要避免反复拷贝','模块间解耦、算法与控制分离、多团队协作的接口设计。','用 Topic 硬套长任务（发目标再自己订阅进度），会丢掉取消语义与超时管理。该用 Action 的地方就用 Action。','算法落地岗的常规要求：熟悉 ROS 2 自定义 msg、srv、action 接口开发。'],
+['ros2','组件化与零拷贝','Composable Node / Intra-process','把多个节点编进同一进程并启用进程内通信，图像与点云不再走序列化与网络栈。','组件化后节点间可共享内存，避免大消息的拷贝开销|必须显式开启 intra-process 通信，且 QoS 要兼容（如 RELIABLE 加 TRANSIENT_LOCAL 才能共享）|同一进程崩溃会带走所有组件，可靠性要求高的场景要权衡|启动文件里用 component_container 加 load_node 组合加载','高帧率相机、激光雷达链路的延迟优化，车端算力紧张时的部署优化。','开了进程内通信但下游就地修改消息，会出现共享内存被改写的脏数据。只读语义必须在接口层讲清楚。','车载与高帧率感知岗位的面试题：点云传输延迟大怎么优化。答案通常指向零拷贝与组件化。'],
+['ros2','use_sim_time 与时钟','Sim Time','让节点用 /clock 话题（仿真时间）而不是系统时间，保证仿真与回放的确定性。','仿真与 rosbag 回放必须全链路开启 use_sim_time，任何一个节点漏设都会时间错乱|时间源统一后，TF 查询、定时器、超时判断才会一致|实机切仿真时最容易忘的就是这个参数|配合仿真时间可做确定性回归测试，同一段失败场景能反复复现','仿真测试、rosbag 回放、CI 回归、故障复现。','部分节点开、部分不开，表现为 TF 查询永远超时或消息时间戳在未来，而报错完全不指向真正原因。','岗位里常见的职责表述：搭建仿真测试环境与回归用例。这是必备知识，面试也常考。'],
+['ros2','colcon 与工作空间','colcon Workspace','ROS 2 的构建工具，管理 src 下多个包，产出 build、install、log 三个目录，支持分层 overlay。','主线命令：colcon build --symlink-install，然后 source install/setup.bash|--symlink-install 让 Python 与配置文件改动免重编译，开发期必开|overlay 机制：source 上层工作空间会覆盖下层的同名包，排查「改了没生效」先查 source 顺序|--packages-select 只编译指定包，大型工作空间必备','ROS 2 开发环境搭建、多包项目管理、CI 构建脚本。','忘了 source 或 source 错层，会出现代码明明改了但跑的是旧版本。这比编译报错难查得多。','岗位写的「能独立搭建 ROS 2 开发环境」，实际考的就是这一套。'],
+['ros2','ROS 1 到 ROS 2 迁移','ros1_bridge / Migration','ROS 2 换成 DDS 通信、默认多线程执行器与生命周期管理，跨版本靠 ros1_bridge 做消息转换。','主要变化：去掉 master、QoS 可配、节点可组合、参数与 launch 体系重写|API 从 rospy 与 roscpp 变为 rclpy 与 rclcpp，命名风格统一|迁移老项目通常先跑 bridge，再逐步替换节点|bridge 只转换消息，不转换 QoS 与时间语义，性能与行为差异要单独验证','存量项目升级、老设备接入新系统、跨版本联调。','以为 bridge 是透明代理：它不保证实时性与 QoS 语义，高频话题过桥后延迟和丢包会明显变化。','存量项目岗位的明确要求：有 ROS 1 转 ROS 2 的迁移经验。这类经验的稀缺性往往被低估。']
+];
+
+/* ============================================================
+   分类
+   ============================================================ */
+const CATS = {
+  sens:  ['感知传感器', '#1b4b8f', '车载感知、机器人感知、激光雷达厂商的公共底座，面试几乎都从这里开始'],
+  radar: ['雷达·信号', '#0e7490', '车载雷达算法与自动驾驶感知岗的核心考点'],
+  fusion:['标定·融合', '#0d9488', '多传感器融合岗的高频面试区，几乎必问外参与时间同步'],
+  est:   ['估计·点云', '#7c3aed', 'SLAM 定位建图岗与雷达跟踪岗的基本功'],
+  mcu:   ['嵌入式 MCU', '#c2410c', '嵌入式软件、驱动开发、电机控制岗的硬门槛'],
+  bus:   ['通信·总线', '#0369a1', '车载电子、嵌入式、测试台架岗位天天在用'],
+  deploy:['部署·加速', '#b91c1c', '算法落地岗必备：会训模型不够，要能塞进车端或边缘端'],
+  auto:  ['汽车·质量', '#4d7c0f', '车规量产与质量体系岗的分水岭，也是项目评审的必答项'],
+  ml:    ['模型基础', '#9333ea', '算法岗通用，模型效果上不去时的排查起点'],
+  embodied: ['具身·规划', '#0f766e', '具身智能与机器人算法岗的主战场'],
+  quant: ['量化·金融', '#a16207', '量化研究与量化开发岗的必备概念'],
+  ros2:  ['ROS 2', '#be185d', '机器人软件岗的通用语言，几乎写在每份 JD 的任职要求里']
+};
+const CAT_FALLBACK = ['其他', '#666666', '通用工程概念'];
+const catMeta = k => CATS[k] || CAT_FALLBACK;
+
+const CARDS = RAW.map((r, i) => ({
+  id: 'c' + i, cat: r[0], term: r[1], en: r[2], one: r[3],
+  pts: r[4].split('|'), use: r[5], trap: r[6], jd: r[7] || ''
+}));
+const BYID = {};
+CARDS.forEach(c => BYID[c.id] = c);
+
+/* ============================================================
+   工具
+   ============================================================ */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const todayStr = () => ymd(new Date());
+function addDays(s, n) {
+  const p = s.split('-').map(Number);
+  return ymd(new Date(p[0], p[1] - 1, p[2] + n));
+}
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
+}
+
+/* ============================================================
+   状态与持久化
+
+   只用 localStorage 不够：清缓存、无痕模式、iOS 回收长期不访问站点
+   的存储，都会把「学到哪了」抹掉。所以这里做三层：
+     1. localStorage  同步读写，首屏不等
+     2. IndexedDB     镜像备份，启动时取两者中较新的那份
+     3. storage.persist()  申请持久化，降低被系统清理的概率
+   ============================================================ */
+const KEY = 'engdrill.v1';
+const IDB_NAME = 'engdrill';
+const IDB_STORE = 'kv';
+
+let S = (() => {
+  try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; }
+})() || { v: 1, newLimit: 8, cards: {}, days: {}, updatedAt: 0 };
+S.cards = S.cards || {}; S.days = S.days || {};
+if (!S.newLimit) S.newLimit = 8;
+if (!S.updatedAt) S.updatedAt = 0;
+
+/* ---------- IndexedDB 镜像 ----------
+   注意：这里必须复用同一个连接，并且把写入串成队列。
+   否则连续评分时多个事务并发、完成顺序不定，最后落盘的可能是
+   较早的快照（实测会只剩 1 张卡），进度就这样丢了。 */
+let _dbp = null;
+let _writeChain = Promise.resolve();
+
+function idbOpen() {
+  if (_dbp) return _dbp;
+  _dbp = new Promise((res, rej) => {
+    if (!('indexedDB' in window)) return rej(new Error('no idb'));
+    const r = indexedDB.open(IDB_NAME, 1);
+    r.onupgradeneeded = () => {
+      if (!r.result.objectStoreNames.contains(IDB_STORE)) r.result.createObjectStore(IDB_STORE);
+    };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  }).catch(e => { _dbp = null; throw e; });
+  return _dbp;
+}
+
+function idbSet(k, v) {
+  _writeChain = _writeChain
+    .then(() => idbOpen())
+    .then(db => new Promise((res, rej) => {
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      tx.objectStore(IDB_STORE).put(v, k);
+      tx.oncomplete = () => res(true);
+      tx.onerror = () => rej(tx.error);
+      tx.onabort = () => rej(tx.error);
+    }))
+    .catch(() => false);
+  return _writeChain;
+}
+
+function idbGet(k) {
+  return _writeChain
+    .then(() => idbOpen())
+    .then(db => new Promise((res, rej) => {
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const rq = tx.objectStore(IDB_STORE).get(k);
+      rq.onsuccess = () => res(rq.result || null);
+      rq.onerror = () => rej(rq.error);
+    }))
+    .catch(() => null);
+}
+
+const save = () => {
+  S.updatedAt = Date.now();
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+  idbSet(KEY, JSON.parse(JSON.stringify(S)));   // 异步镜像，不阻塞交互
+};
+
+/* localStorage 被清过时，从 IndexedDB 把进度捞回来。
+   不设超时竞速：首屏已经用 localStorage 渲染完了，这里慢一点不影响可见速度，
+   反而能避免"备份明明在、却被超时判成没有"的误伤。 */
+function restoreFromIDB() {
+  return idbGet(KEY).then(remote => {
+    if (!remote || !remote.cards) return false;
+    if ((remote.updatedAt || 0) <= (S.updatedAt || 0)) return false;
+    S = remote;
+    S.cards = S.cards || {}; S.days = S.days || {};
+    if (!S.newLimit) S.newLimit = 8;
+    if (!S.updatedAt) S.updatedAt = 0;
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+    return true;
+  }).catch(() => false);
+}
+
+/* 申请持久化存储：告诉浏览器这份数据要长期保留 */
+function requestPersist() {
+  try {
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persisted()
+        .then(has => { if (!has) return navigator.storage.persist(); })
+        .catch(() => {});
+    }
+  } catch (e) {}
+}
+
+function todayRec() {
+  const t = todayStr();
+  if (!S.days[t]) S.days[t] = { n: 0, r: 0 };
+  return S.days[t];
+}
+function streak() {
+  let n = 0, d = todayStr();
+  const rec = S.days[d];
+  if (rec && rec.n + rec.r > 0) { n = 1; d = addDays(d, -1); }
+  while (true) {
+    const r = S.days[d];
+    if (!r || r.n + r.r === 0) break;
+    n++; d = addDays(d, -1);
+  }
+  return n;
+}
+
+/* ============================================================
+   调度：SM-2 变体
+   ============================================================ */
+function nextState(prev, q) {
+  const s = Object.assign({ ef: 2.5, reps: 0, ivl: 0, lapses: 0, seen: 0 }, prev || {});
+  s.seen = (s.seen || 0) + 1;
+  s.last = todayStr();
+  if (q === 0) {
+    s.lapses = (s.lapses || 0) + 1;
+    s.reps = 0;
+    s.ivl = 0;
+    s.ef = Math.max(1.3, s.ef - 0.2);
+    s.due = todayStr();
+    return s;
+  }
+  const ef = s.ef;
+  if (q === 3) {
+    s.ivl = s.ivl ? Math.max(1, Math.round(s.ivl * 1.2)) : 1;
+    s.ef = Math.max(1.3, ef - 0.15);
+  } else if (q === 4) {
+    s.ivl = !s.ivl ? 1 : (s.reps <= 1 ? 6 : Math.max(2, Math.round(s.ivl * ef)));
+  } else {
+    s.ivl = !s.ivl ? 3 : Math.max(Math.round(s.ivl * ef * 1.3), s.ivl + 2);
+    s.ef = Math.min(3.0, ef + 0.1);
+  }
+  s.reps = (s.reps || 0) + 1;
+  s.due = addDays(todayStr(), s.ivl);
+  return s;
+}
+
+/* ============================================================
+   今日队列
+   ============================================================ */
+let QUEUE = [], IDX = 0;
+
+function newPool() {
+  const g = {};
+  CARDS.forEach(c => { if (!S.cards[c.id]) (g[c.cat] = g[c.cat] || []).push(c); });
+  const out = [];
+  let more = true;
+  while (more) {
+    more = false;
+    Object.keys(CATS).forEach(k => {
+      if (g[k] && g[k].length) { out.push(g[k].shift()); more = true; }
+    });
+  }
+  return out;
+}
+function duePool() {
+  const t = todayStr();
+  return CARDS
+    .filter(c => S.cards[c.id] && S.cards[c.id].due <= t)
+    .sort((a, b) => (S.cards[a.id].due < S.cards[b.id].due ? -1 : 1));
+}
+function buildDeck() {
+  const rec = todayRec();
+  const allowNew = Math.max(0, S.newLimit - rec.n);
+  const nw = newPool().slice(0, allowNew).map(c => ({ c, isNew: true }));
+  const dv = duePool().map(c => ({ c, isNew: false }));
+  QUEUE = [];
+  let i = 0, j = 0;
+  while (i < nw.length || j < dv.length) {
+    if (i < nw.length) QUEUE.push(nw[i++]);
+    if (j < dv.length) QUEUE.push(dv[j++]);
+  }
+  IDX = 0;
+}
+
+/* ============================================================
+   渲染：今日
+   ============================================================ */
+const V = { today: $('#v-today'), quiz: $('#v-quiz'), bank: $('#v-bank'), data: $('#v-data') };
+
+function chipHTML(cat, extra) {
+  const m = CATS[cat] || ['其他', '#666'];
+  return '<span class="chip" style="color:' + m[1] + ';background:' + m[1] + '14">' + escapeHTML(m[0]) + '</span>' + (extra || '');
+}
+
+function renderToday() {
+  if (IDX >= QUEUE.length) {
+    const rec = todayRec();
+    const total = Object.keys(S.cards).length;
+    const left = duePool().length + Math.max(0, S.newLimit - rec.n);
+    V.today.innerHTML =
+      '<div class="done">' +
+        '<h2>' + (rec.n + rec.r > 0 ? '今天这一轮走完了' : '今天还没有卡片') + '</h2>' +
+        '<p>' + (rec.n + rec.r > 0 ? '间隔重复的意义在于明天还记得，不在于今天看完。' : '点下面的按钮开始今日推送。') + '</p>' +
+        '<div class="done__grid">' +
+          '<div><b>' + rec.n + '</b><span>今日新学</span></div>' +
+          '<div><b>' + rec.r + '</b><span>今日复习</span></div>' +
+          '<div><b>' + total + '</b><span>累计学过</span></div>' +
+        '</div>' +
+        '<a class="btn" href="#" data-act="' + (left > 0 ? 'restart' : 'quiz') + '">' +
+          (left > 0 ? '再看一轮' : '去做四选一') + '</a>' +
+        (left > 0 ? '<div style="margin-top:12px"><a class="btn btn--ghost" href="#" data-act="quiz">去做四选一</a></div>' : '') +
+      '</div>';
+    updateHead();
+    return;
+  }
+  const item = QUEUE[IDX], c = item.c;
+  const st = S.cards[c.id];
+  const pts = c.pts.map(p => '<li>' + escapeHTML(p) + '</li>').join('');
+  V.today.innerHTML =
+    '<div class="card" id="card">' +
+      '<div class="card__top">' + chipHTML(c.cat,
+        (item.isNew ? '<span class="chip chip--new">新卡</span>' : (st && st.ivl ? '<span class="chip">间隔 ' + st.ivl + ' 天</span>' : '')) +
+        (c.src === 'jd' ? '<span class="chip chip--jd">JD 新增</span>' : '')
+      ) + '</div>' +
+      '<h2 class="term">' + escapeHTML(c.term) + '<span class="en">' + escapeHTML(c.en) + '</span></h2>' +
+      '<div class="hint">点击卡片翻面<span class="kbd">空格</span></div>' +
+      '<div class="back">' +
+        '<div class="sec"><div class="lbl">一句话定义</div><p class="one">' + escapeHTML(c.one) + '</p></div>' +
+        '<div class="sec sec--jd"><div class="lbl">岗位场景 · 为什么考它</div><p>' + escapeHTML(c.jd || catMeta(c.cat)[2] || '') + '</p></div>' +
+        '<div class="sec"><div class="lbl">原理与要点</div><ul class="pts">' + pts + '</ul></div>' +
+        '<div class="sec sec--use"><div class="lbl">工程上怎么用</div><p>' + escapeHTML(c.use) + '</p></div>' +
+        '<div class="sec sec--trap"><div class="lbl">容易踩的坑</div><p>' + escapeHTML(c.trap) + '</p></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="rate" id="rate" hidden>' +
+      '<button class="q0" data-q="0">忘了<span>稍后再来</span></button>' +
+      '<button class="q3" data-q="3">有点难<span>拉长一点</span></button>' +
+      '<button class="q4" data-q="4">记得<span>正常间隔</span></button>' +
+      '<button class="q5" data-q="5">太简单<span>跳更远</span></button>' +
+    '</div>';
+  updateHead();
+}
+
+function reveal() {
+  const card = $('#card'); if (!card || card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  const r = $('#rate'); if (r) r.hidden = false;
+}
+function rate(q) {
+  const item = QUEUE[IDX]; if (!item) return;
+  const c = item.c;
+  const st = nextState(S.cards[c.id], q);
+  S.cards[c.id] = st;
+  const rec = todayRec();
+  if (item.isNew) rec.n++; else rec.r++;
+  if (st.due <= todayStr()) QUEUE.push({ c: c, isNew: false });
+  save();
+  IDX++;
+  renderToday();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateHead() {
+  const rec = todayRec();
+  const done = rec.n + rec.r;
+  $('#metaToday').textContent = '今日 ' + done + ' 张';
+  const s = streak();
+  const el = $('#metaStreak');
+  el.textContent = '连续 ' + s + ' 天';
+  el.className = 'streak' + (s > 0 ? ' on' : '');
+  const total = Math.max(QUEUE.length, 1);
+  const pct = IDX >= QUEUE.length ? 100 : Math.round(IDX / total * 100);
+  $('#bar').style.width = pct + '%';
+}
+
+/* ============================================================
+   渲染：四选一
+   ============================================================ */
+let QZ = null;
+
+function shuffle(a) {
+  const b = a.slice();
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = b[i]; b[i] = b[j]; b[j] = t;
+  }
+  return b;
+}
+
+function pickQuiz() {
+  const pool = duePool().concat(CARDS.filter(c => !S.cards[c.id]).slice(0, 20));
+  const src = pool.length ? pool : CARDS;
+  const target = src[Math.floor(Math.random() * src.length)];
+  const same = shuffle(CARDS.filter(c => c.cat === target.cat && c.id !== target.id)).slice(0, 2);
+  const rest = shuffle(CARDS.filter(c => c.cat !== target.cat)).slice(0, 3 - same.length);
+  QZ = { target: target, opts: shuffle([target].concat(same, rest)), answered: false };
+  renderQuiz();
+}
+function renderQuiz() {
+  if (!QZ) return pickQuiz();
+  const t = QZ.target;
+  const opts = QZ.opts.map(o =>
+    '<button class="opt" data-id="' + o.id + '">' + escapeHTML(o.term) + '</button>'
+  ).join('');
+  V.quiz.innerHTML =
+    '<div class="qcard">' +
+      '<div class="qask">' + escapeHTML((CATS[t.cat] || [''])[0]) + ' · 下面这段说的是哪个概念</div>' +
+      '<div class="qtext">' + escapeHTML(t.one) + '</div>' +
+      '<div class="opts" id="opts">' + opts + '</div>' +
+      '<div class="qexp" id="qexp">' +
+        '<div class="t">' + escapeHTML(t.term) + '</div>' +
+        '<p>' + escapeHTML(t.use) + '</p>' +
+        '<p style="margin-top:8px;color:#7a4a08"><b>坑：</b>' + escapeHTML(t.trap) + '</p>' +
+      '</div>' +
+    '</div>' +
+    '<div style="margin-top:14px;text-align:center" id="qfoot" hidden><a class="btn btn--ghost" href="#" data-act="nextq">下一题</a></div>';
+  updateHead();
+}
+function answer(id) {
+  if (!QZ || QZ.answered) return;
+  QZ.answered = true;
+  const ok = id === QZ.target.id;
+  $$('#opts .opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === QZ.target.id) b.classList.add('right');
+    else if (b.dataset.id === id) b.classList.add('wrong');
+  });
+  $('#qexp').classList.add('on');
+  const foot = $('#qfoot'); if (foot) foot.hidden = false;
+  const c = QZ.target;
+  S.cards[c.id] = nextState(S.cards[c.id], ok ? 4 : 0);
+  const rec = todayRec();
+  if (S.cards[c.id].seen === 1) rec.n++; else rec.r++;
+  save();
+  updateHead();
+}
+
+/* ============================================================
+   渲染：题库
+   ============================================================ */
+let bankCat = 'all', bankQ = '', bankState = 'all';
+function renderBank() {
+  const cats = Object.keys(CATS).map(k =>
+    '<button data-cat="' + k + '" class="' + (bankCat === k ? 'on' : '') + '">' + CATS[k][0] + '</button>'
+  ).join('');
+
+  const t = todayStr();
+  const nNew = CARDS.filter(c => !S.cards[c.id]).length;
+  const nDue = CARDS.filter(c => S.cards[c.id] && S.cards[c.id].due <= t).length;
+  const nDone = CARDS.length - nNew - nDue;
+
+  let list = CARDS.filter(c => bankCat === 'all' || c.cat === bankCat);
+  if (bankQ) {
+    const q = bankQ.toLowerCase();
+    list = list.filter(c => (c.term + c.en + c.one + c.pts.join('')).toLowerCase().indexOf(q) >= 0);
+  }
+  if (bankState === 'new') list = list.filter(c => !S.cards[c.id]);
+  if (bankState === 'due') list = list.filter(c => S.cards[c.id] && S.cards[c.id].due <= t);
+  if (bankState === 'done') list = list.filter(c => S.cards[c.id] && S.cards[c.id].due > t);
+
+  const items = list.map(c => {
+    const m = CATS[c.cat] || ['', '#999'];
+    const st = S.cards[c.id];
+    const isDue = st && st.due <= t;
+    const lvl = !st ? 0 : (st.ivl >= 21 ? 3 : st.ivl >= 6 ? 2 : 1);
+    const col = ['#d3d8e3', '#e0b467', '#5f9ea0', '#1b4b8f'][lvl];
+    const badge = !st
+      ? '<span class="st st--new">未学</span>'
+      : isDue
+        ? '<span class="st st--due">待复习</span>'
+        : '<span class="st st--ok">隔 ' + st.ivl + ' 天</span>';
+    let sched = '';
+    if (st) {
+      const dl = Math.round((new Date(st.due + 'T00:00:00') - new Date(t + 'T00:00:00')) / 86400000);
+      sched = '<span class="k">复习计划</span>已复习 ' + (st.n || 1) + ' 次，当前间隔 ' + st.ivl + ' 天，' +
+        (dl <= 0 ? '今天到期' : dl + ' 天后（' + st.due + '）');
+    }
+    return '<div class="item" data-id="' + c.id + '">' +
+      '<button class="item__h"><span class="dot" style="background:' + col + '"></span>' +
+        escapeHTML(c.term) + badge + '<span class="cat">' + escapeHTML(m[0]) + '</span></button>' +
+      '<div class="item__b">' +
+        '<span class="k">定义</span>' + escapeHTML(c.one) +
+        '<span class="k">岗位场景</span>' + escapeHTML(c.jd || catMeta(c.cat)[2] || '') +
+        '<span class="k">要点</span><ul class="pts" style="margin-top:2px">' + c.pts.map(p => '<li>' + escapeHTML(p) + '</li>').join('') + '</ul>' +
+        '<span class="k">用法</span>' + escapeHTML(c.use) +
+        '<span class="k">坑</span>' + escapeHTML(c.trap) +
+        sched +
+      '</div></div>';
+  }).join('');
+
+  const states = [['all', '全部', CARDS.length], ['new', '未学', nNew], ['due', '待复习', nDue], ['done', '已学', nDone]];
+  V.bank.innerHTML =
+    '<input class="search" id="bankSearch" placeholder="搜索术语、英文或关键词…" value="' + escapeHTML(bankQ) + '">' +
+    '<div class="filters">' + states.map(s =>
+      '<button data-state="' + s[0] + '" class="' + (bankState === s[0] ? 'on' : '') + '">' + s[1] + ' ' + s[2] + '</button>'
+    ).join('') + '</div>' +
+    '<div class="filters"><button data-cat="all" class="' + (bankCat === 'all' ? 'on' : '') + '">全部分类</button>' + cats + '</div>' +
+    (items || '<p style="color:#8b93a5;font-size:13px;padding:20px 0">没有匹配的条目</p>');
+  updateHead();
+}
+
+/* ============================================================
+   渲染：数据
+   ============================================================ */
+function renderData() {
+  const ids = Object.keys(S.cards);
+  const learned = ids.length;
+  const mature = ids.filter(id => S.cards[id].ivl >= 21).length;
+  const dueN = duePool().length;
+  const s = streak();
+
+  // 热力图：最近 35 天
+  let heat = '';
+  for (let i = 34; i >= 0; i--) {
+    const d = addDays(todayStr(), -i);
+    const r = S.days[d];
+    const n = r ? r.n + r.r : 0;
+    const lv = n === 0 ? '' : n < 5 ? 'l1' : n < 12 ? 'l2' : n < 25 ? 'l3' : 'l4';
+    heat += '<i class="' + lv + '" title="' + d + ' · ' + n + ' 张"></i>';
+  }
+
+  // 分类进度
+  const rows = Object.keys(CATS).map(k => {
+    const all = CARDS.filter(c => c.cat === k);
+    const done = all.filter(c => S.cards[c.id]).length;
+    const pct = Math.round(done / all.length * 100);
+    return '<div class="cat-row"><div class="cat-row__t"><span>' + CATS[k][0] +
+      '</span><b>' + done + '/' + all.length + '</b></div><div class="bar"><i style="width:' + pct + '%"></i></div></div>';
+  }).join('');
+
+  V.data.innerHTML =
+    '<div class="panel"><h3>总览</h3><div class="kpis">' +
+      '<div><b>' + learned + '</b><span>已接触</span></div>' +
+      '<div><b>' + mature + '</b><span>长期记忆</span></div>' +
+      '<div><b>' + dueN + '</b><span>待复习</span></div>' +
+      '<div><b>' + s + '</b><span>连续天数</span></div>' +
+    '</div></div>' +
+    '<div class="panel"><h3>近 35 天</h3><div class="heat">' + heat + '</div>' +
+      '<p style="font-size:11.5px;color:#8b93a5;margin-top:10px">每格一天，颜色越深当天过卡越多。</p></div>' +
+    '<div class="panel"><h3>分类进度</h3>' + rows + '</div>' +
+    '<div class="panel"><h3>设置</h3>' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">' +
+        '<span style="font-size:13px;color:#4b5568">每日新卡</span>' +
+        '<select class="sel" id="limSel">' +
+          [5, 8, 12, 16, 20].map(n => '<option value="' + n + '"' + (S.newLimit === n ? ' selected' : '') + '>' + n + ' 张</option>').join('') +
+        '</select>' +
+        '<span style="font-size:12px;color:#8b93a5">全库 ' + CARDS.length + ' 张</span>' +
+      '</div>' +
+      '<div class="tools">' +
+        '<button data-act="export">导出进度</button>' +
+        '<label>导入进度<input type="file" id="impFile" accept=".json" hidden></label>' +
+        '<button data-act="refresh">刷新题库</button>' +
+        '<button class="danger" data-act="reset">清空全部进度</button>' +
+      '</div>' +
+      '<p style="font-size:11.5px;color:#8b93a5;margin-top:14px;line-height:1.9">' +
+        '页面版本 ' + APP_BUILD + ' · 内置 ' + (CARDS.length - EXTMETA.n) + ' 张 · JD 增量 ' + EXTMETA.n + ' 张' +
+        (EXTMETA.updated ? '（数据更新于 ' + escapeHTML(EXTMETA.updated) + '）' : '') + '<br>' +
+        (location.protocol === 'file:'
+          ? '当前是本地文件模式，只读内置卡；想拿增量卡要用 http 地址打开'
+          : '每次打开自动拉最新增量卡；页面文件本身有更新时点「刷新题库」') + '<br>' +
+        '进度：已学 <b style="color:#4b5568">' + learned + '</b> / ' + CARDS.length + ' 张，存在本机浏览器（localStorage + IndexedDB 双写）' +
+        (S.persisted ? '，已申请持久化存储' : '') + '<br>' +
+        '换设备或想彻底不怕丢，用「导出 / 导入」迁移。' +
+      '</p>' +
+    '</div>';
+  updateHead();
+}
+
+/* ============================================================
+   事件
+   ============================================================ */
+document.addEventListener('click', e => {
+  const tab = e.target.closest('nav.tabs button');
+  if (tab) {
+    const v = tab.dataset.v;
+    $$('nav.tabs button').forEach(b => b.classList.toggle('on', b === tab));
+    Object.keys(V).forEach(k => { V[k].hidden = k !== v; });
+    if (v === 'today') { if (!QUEUE.length) buildDeck(); renderToday(); }
+    if (v === 'quiz') renderQuiz();
+    if (v === 'bank') renderBank();
+    if (v === 'data') renderData();
+    return;
+  }
+
+  const card = e.target.closest('#card');
+  if (card) { reveal(); return; }
+
+  const qb = e.target.closest('.rate button');
+  if (qb) { rate(Number(qb.dataset.q)); return; }
+
+  const opt = e.target.closest('.opt');
+  if (opt) { answer(opt.dataset.id); return; }
+
+  const act = e.target.closest('[data-act]');
+  if (act) {
+    e.preventDefault();
+    const a = act.dataset.act;
+    if (a === 'restart') { buildDeck(); renderToday(); }
+    if (a === 'quiz') { $$('nav.tabs button').forEach(b => b.classList.toggle('on', b.dataset.v === 'quiz')); Object.keys(V).forEach(k => V[k].hidden = k !== 'quiz'); pickQuiz(); }
+    if (a === 'nextq') { pickQuiz(); }
+    if (a === 'refresh') {
+      const u = new URL(location.href);
+      u.searchParams.set('v', Date.now());
+      location.replace(u.toString());
+    }
+    if (a === 'export') {
+      const blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
+      const a2 = document.createElement('a');
+      a2.href = URL.createObjectURL(blob);
+      a2.download = 'engdrill-' + todayStr() + '.json';
+      a2.click();
+    }
+    if (a === 'reset') {
+      if (confirm('清空全部学习进度？此操作不可恢复。')) {
+        S = { v: 1, newLimit: S.newLimit, cards: {}, days: {} };
+        save(); buildDeck(); renderData();
+      }
+    }
+    return;
+  }
+
+  const fBtn = e.target.closest('.filters button');
+  if (fBtn && V.bank.contains(fBtn)) {
+    if (fBtn.dataset.state) bankState = fBtn.dataset.state;
+    if (fBtn.dataset.cat) bankCat = fBtn.dataset.cat;
+    renderBank();
+    return;
+  }
+
+  const ih = e.target.closest('.item__h');
+  if (ih) { ih.parentElement.classList.toggle('open'); return; }
+});
+
+document.addEventListener('input', e => {
+  if (e.target.id === 'bankSearch') { bankQ = e.target.value; renderBank(); }
+  if (e.target.id === 'limSel') { S.newLimit = Number(e.target.value); save(); buildDeck(); }
+});
+
+document.addEventListener('change', e => {
+  if (e.target.id === 'impFile') {
+    const f = e.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        const d = JSON.parse(rd.result);
+        if (!d || !d.cards) throw 0;
+        S = d; S.days = S.days || {}; S.newLimit = S.newLimit || 8;
+        save(); buildDeck(); renderData();
+        alert('已导入');
+      } catch (err) { alert('文件格式不对'); }
+    };
+    rd.readAsText(f);
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (V.today.hidden) return;
+  if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); reveal(); return; }
+  if (['1', '2', '3', '4'].indexOf(e.key) >= 0) {
+    const card = $('#card');
+    if (card && card.classList.contains('revealed')) rate([0, 3, 4, 5][Number(e.key) - 1]);
+  }
+});
+
+/* ============================================================
+   云端增量卡：运行时从同目录 cards.json 合并（流水线每天写入）
+   ============================================================ */
+let EXTMETA = { n: 0, updated: '', total: 0 };
+const APP_BUILD = '2026-10-26';
+
+/* 用术语哈希做稳定 id：cards.json 里顺序变化也不会让手机上的进度错位 */
+function stableId(term) {
+  let h = 5381;
+  for (let i = 0; i < term.length; i++) h = ((h * 33) ^ term.charCodeAt(i)) | 0;
+  return 'x' + (h >>> 0).toString(36);
+}
+
+function loadExternal() {
+  return new Promise(resolve => {
+    let settled = false;
+    const finish = () => { if (!settled) { settled = true; resolve(); } };
+    if (location.protocol === 'file:') return finish();     // 本地双击时跳过，用内置卡
+    const timer = setTimeout(finish, 2000);
+    fetch('cards.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => {
+        if (settled || !d) return;
+        const list = Array.isArray(d.cards) ? d.cards : [];
+        let n = 0;
+        list.forEach(x => {
+          if (!x || !x.term) return;
+          const term = String(x.term).trim();
+          if (!term || CARDS.some(c => c.term === term)) return;
+          const sid = stableId(term);
+          if (BYID[sid]) return;
+          const c = {
+            id: sid,
+            cat: CATS[x.cat] ? x.cat : 'embodied',
+            term: term,
+            en: x.en || '',
+            one: x.one || '',
+            pts: (Array.isArray(x.pts) && x.pts.length) ? x.pts.slice(0, 5) : ['（待补充要点）'],
+            use: x.use || '（待补充）',
+            trap: x.trap || '（待补充）',
+            jd: x.jd || '',
+            src: 'jd',
+            added: x.added || ''
+          };
+          CARDS.push(c);
+          BYID[c.id] = c;
+          n++;
+        });
+        EXTMETA = { n: n, updated: d.updated || '', total: list.length };
+      })
+      .catch(() => {})
+      .then(() => { clearTimeout(timer); finish(); });
+  });
+}
+
+/* ============================================================
+   启动
+   ============================================================ */
+loadExternal().then(() => {
+  buildDeck();
+  renderToday();
+
+  // 首屏已经用 localStorage 渲染完，再把 IndexedDB 里的备份捞回来比对，
+  // 只有那份更新（通常是 localStorage 被清过）才重新渲染
+  restoreFromIDB().then(hit => {
+    if (hit) { buildDeck(); renderToday(); }
+    requestPersist();
+  });
+
+  // 注册 Service Worker：断网也能打开；file:// 下会静默失败，不影响使用
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+});
+</script>
+</body>
+</html>
