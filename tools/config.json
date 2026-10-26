@@ -29,10 +29,12 @@
   "minMentions": 3,
   "maxNewPerDay": 8,
   "maxPagesPerKeyword": 3,
+  "maxDetailsPerDay": 60,
 
   "_notes": {
     "minMentions": "一个概念至少被几个不同岗位提到才做成卡片，防止噪音进题库",
     "maxNewPerDay": "每天最多新增几张，宁少勿滥",
-    "maxPagesPerKeyword": "每个关键词翻几页列表，控制抓取量与风控风险"
+    "maxPagesPerKeyword": "每个关键词翻几页列表，控制抓取量与风控风险",
+    "maxDetailsPerDay": "每天抓多少条岗位详情。60 条约 9 分钟；120 条约 19 分钟。列表看的是广度，详情只看能不能抽到概念，60 条足够"
   }
 }

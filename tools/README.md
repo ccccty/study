@@ -66,7 +66,17 @@ python tools/merge_cards.py candidates/2026-10-27.json
 
 # 6. 一次 commit 一次 push（数据和候选记录都在这个仓库里）
 git add cards.json candidates/ && git commit -m "cards: 2026-10-27 新增 5 张" && git push
+
+# 7. 顺手出一份岗位市场报告（本地，不入库）
+cd E:/工作/boss-jobs && .venv/Scripts/python.exe \
+  C:/Users/50357/.workbuddy/skills/boss-analyze/scripts/analyze.py \
+  --input data/study_2026-10-27_detail.json \
+  --out "reports/岗位市场报告_2026-10-27.html" --top 40
 ```
+
+报告是自包含 HTML（KPI / 城市分布 / 岗位类型 / 薪资区间 / 经验学历 / JD 高频词 / 公司 Top10 / 可展开的岗位明细），断网也能看。
+
+**报告只留在本地 `E:/工作/boss-jobs/reports/`，不提交进本仓库** —— 它含公司名、薪资与 JD 原文，放到公开的 GitHub Pages 等于对外分发抓取数据。
 
 ### 参数
 
@@ -75,7 +85,7 @@ git add cards.json candidates/ && git commit -m "cards: 2026-10-27 新增 5 张"
 | `--dry-run` | 只报告，不写文件 |
 | `--max=8` | 本次最多写入几张，配合「宁少勿滥」 |
 
-`config.json` 里的 `minMentions`（默认 3）控制「一个概念被几个不同岗位提到才值得做卡」，`maxPagesPerKeyword` 控制抓取量。改城市或方向只改这个文件。
+`tools/config.json` 里的 `minMentions`（默认 3）控制「一个概念被几个不同岗位提到才值得做卡」；`maxPagesPerKeyword`（3 页）与 `maxDetailsPerDay`（60 条）控制抓取量——60 条详情约 9 分钟，120 条约 19 分钟。改城市或方向只改这个文件。
 
 ---
 
