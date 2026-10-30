@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-30",
+  "cities": ["上海", "南京", "成都", "苏州"],
+  "jdCount": 60,
+  "source": "boss-scrape",
+  "cards": [
+    {
+      "cat": "bus",
+      "term": "PCIe 总线与设备枚举",
+      "en": "PCI Express enumeration, BAR and TLP",
+      "one": "点对点、串行、分层的差分总线，主机枚举时给每个设备分配总线号与 BAR 地址空间，之后用 TLP 包收发数据。",
+      "jd": "岗位原话：负责 PCIe 设备枚举、BAR 空间映射、MSI-X 中断与 DMA 描述符环的设计实现。面试会追问 BAR 地址是谁分配的、MSI-X 比 INTx 到底解决了什么问题。",
+      "pts": [
+        "三层结构：事务层 TLP、数据链路层 DLLP（ACK/NAK 重传加 CRC）、物理层；Gen3 每 lane 8GT/s 用 128b/130b 编码，有效约 985MB/s，Gen4 与 Gen5 逐代翻倍",
+        "枚举是从总线 0 开始的深度优先扫描：读配置空间拿 Vendor/Device ID 与 Class Code，按 BAR 写的全 1 回读算出所需大小，再分配地址并置位 Command 的 memory 与 bus master",
+        "中断走 MSI/MSI-X：能力表里登记目标地址与数据，设备写一次内存就是一次中断，天然支持多向量，可把每个收发队列绑到不同 CPU 核",
+        "链路速率与宽度会协商降级，lspci -vv 里对比 LnkCap 与 LnkSta 就能看出是 x16 跑成了 x4 还是 Gen4 掉到 Gen1"
+      ],
+      "use": "服务器与域控里接 NVMe、FPGA 采集卡、5G 模组、GPU；驱动侧按 BAR 映射寄存器，再用描述符环做 DMA 搬数。",
+      "trap": "把 Gen4 x16 的卡插到 PCH 下行的 x4 槽位，功能全对但吞吐只有 1/8，还以为是驱动没优化——先看 lspci 的 LnkSta 与 CPU 直连拓扑，再怀疑代码。"
+    },
+    {
+      "cat": "mcu",
+      "term": "Linux 设备树",
+      "en": "Device Tree (DTS / DTB)",
+      "one": "用 dts 与 dtsi 源文件描述板级硬件资源的数据结构，编译成 DTB 交给内核，驱动靠 compatible 字符串匹配到对应节点。",
+      "jd": "岗位原话：完成内核移植与设备树适配，能独立修改 DTS 并解决驱动 probe 失败。面试会问 compatible 是怎么匹配上的、reg 和 interrupts 分别被谁消费。",
+      "pts": [
+        "构建链是 dts/dtsi 源码经 dtc 编成 dtb，内核启动时展开成 device_node，再为 matching 的节点生成 platform_device 等着驱动 probe",
+        "匹配靠 compatible 列表，从最具体到最通用逐项比对 of_match_table；匹配不上就永远不 probe，日志里往往只有一句 no matching node",
+        "reg 给寄存器基址与长度，interrupts 给中断号与触发类型，clocks、resets、pinctrl 都是 phandle 引用，缺任何一个都会 probe 失败",
+        "status 取 okay 或 disabled 控制节点是否生效；用 overlay 能在不改基础 dts 的前提下给同一 SoC 配不同载板"
+      ],
+      "use": "新板 bring-up 时配 SPI 转 CAN FD、MIPI CSI 相机、USB PHY 与 PCIe 控制器；一颗 SoC 出多款载板，靠 dts 区分而不改内核。",
+      "trap": "改完 dts 只 make dtbs 却没重新打包 boot.img，板上跑的还是旧 dtb，症状是「代码明明改了就是不生效」——先比对板上 /sys/firmware/fdt 的 md5。"
+    },
+    {
+      "cat": "auto",
+      "term": "AUTOSAR 通信栈",
+      "en": "AUTOSAR COM / PDU Router / CanIf stack",
+      "one": "AUTOSAR CP 里把应用信号一路送到总线的分层软件：COM 把信号打包成 I-PDU，PDU Router 分发，CanIf 交给 CAN 驱动。",
+      "jd": "岗位原话：负责 CP 架构整车通信协议栈开发与集成，解决丢帧、超时、信号错误。面试会追问一个信号从 SWC 到总线要穿过哪几层、CAN TP 的流控参数怎么定。",
+      "pts": [
+        "发送路径：SWC 写 signal 经 RTE 到 COM，COM 按通信矩阵把信号打成 I-PDU，PDU Router 选路由，CanIf 下发到 Can Driver，最后进控制器发上总线",
+        "信号打包要处理起始位与字节序，同一个信号在大小端 ECU 之间的位布局不同，DBC 或 ARXML 通信矩阵是唯一真值，代码不许自己算偏移",
+        "超过 8 字节走 CAN TP（ISO 15765-2）：首帧 FF 带总长、连续帧 CF 按序发、流控帧 FC 用 BS 与 STmin 约束一次连发几帧与帧间隔",
+        "E2E 保护在 COM 之上叠 CRC 与滚动计数器，接收端校验失败即丢帧上报，防的是整车网络里的静默丢帧与篡改"
+      ],
+      "use": "域控与 ECU 的信号收发、DCM/DEM 诊断、NM 网络管理休眠唤醒，全挂在这条栈上。",
+      "trap": "只改 DBC 不改 ARXML，COM 的打包布局和实测报文对不上，现象是信号值乱跳却没有任何报错——上车前必须拿通信矩阵双向核对起始位与字节序。"
+    },
+    {
+      "cat": "auto",
+      "term": "ASPICE 软件过程评估",
+      "en": "Automotive SPICE process assessment",
+      "one": "面向汽车电子的软件过程能力评估模型，把开发拆成需求、架构、详细设计、验证等过程域，按 0 到 5 级评能力。",
+      "jd": "岗位原话：依据 ASPICE 及 V 模型流程沟通客户需求，完成单元测试、集成测试，并按 ASPICE 规范编写文档组织评审。面试会问你负责的模块在 V 模型左边哪一层、对应右边哪项测试。",
+      "pts": [
+        "V 模型落地成过程域：SYS.1 到 SYS.3 管系统需求与架构，SWE.1 到 SWE.6 依次是软件需求、架构、详细设计、单元验证、集成测试、合格性测试",
+        "每个过程域要双向追溯：需求对设计、设计对代码、代码对测试用例，评审记录与变更记录都算交付物，断链就是不符合项",
+        "能力级 CL1 已执行、CL2 已管理（有计划、有监控、有调整）、CL3 已建立（组织级标准流程可裁剪）；主机厂量产项目通常要求 CL2 以上",
+        "与 ISO 26262 分工：ASPICE 查过程是否做全，26262 查功能安全是否做到 ASIL 等级，审核时互相引用但互不替代"
+      ],
+      "use": "量产 ECU 项目的过程裁剪、评审组织与交付物清单；供应商投标时常被要求出示 ASPICE 评估等级证明。",
+      "trap": "项目结束前一次性补文档，需求版本和测试用例版本对不上，评审时一查提交时间轴就露馅——ASPICE 审的是过程证据的时间顺序，不是文档齐不齐。"
+    },
+    {
+      "cat": "bus",
+      "term": "USB 枚举与传输类型",
+      "en": "USB enumeration and transfer types",
+      "one": "主机主导的差分串行总线，设备插入后由主机枚举分配地址、逐级读描述符，再按接口类型加载对应的类驱动。",
+      "jd": "岗位原话：熟悉串口、SPI、I2C、CAN、USB 等常见接口协议及驱动开发，完成 USB2.0/3.0 的 BSP 适配。面试会追问枚举那几步都读了什么描述符、等时传输为什么不重传。",
+      "pts": [
+        "枚举流程：主机靠 D+ 上拉发现设备，复位后在地址 0 读 18 字节设备描述符，分配新地址，再逐级读配置、接口、端点描述符，最后选配置并加载驱动",
+        "四种传输各有取舍：控制传输保证送达用于枚举与命令，批量传输有 CRC 重传但不保带宽，中断传输靠主机轮询，等时传输保带宽但绝不重传",
+        "速率分档：全速 12Mbps、高速 480Mbps、SuperSpeed 5Gbps；协议开销不小，高速批量实测吞吐约 40MB/s 量级",
+        "端点 0 固定做默认控制通道，其余端点方向固定，一个接口下的端点集合就是一条 pipe；复合设备靠多配置或多接口区分功能"
+      ],
+      "use": "BSP 适配 USB2.0/3.0 口与 Type-C、接 U 盘与摄像头与 4G 模组；排查时看 dmesg 的枚举日志和 lsusb -t 的拓扑与带宽。",
+      "trap": "等时端点的带宽是枚举时按帧谈好的，谈不下来就直接配置失败；跑起来之后再丢包不会重传，只能靠应用层缓冲兜——先看 lsusb -t 的带宽占用，别急着改驱动。"
+    },
+    {
+      "cat": "mcu",
+      "term": "Linux 性能剖析与追踪",
+      "en": "perf / ftrace / eBPF profiling",
+      "one": "Linux 上定位性能与延迟问题的两类手段：采样型剖析器周期性抓调用栈统计热点，追踪型工具在函数或内核事件上打点记录时序。",
+      "jd": "岗位原话：熟练使用 lspci、setpci、perf、ftrace、bpftrace 沉淀可复用的调试脚本，用 perf、numastat、ftrace 定位带宽与中断瓶颈。面试会追问一次采样到底抓到了什么、火焰图该怎么读。",
+      "pts": [
+        "perf 靠 PMU 与定时器采样，perf record -F 99 -g 是常见写法（99Hz 避开与定时任务同频的采样偏差），perf stat 直接给 IPC、cache-miss、上下文切换数",
+        "火焰图把采样栈按出现频次聚合：横轴宽度是占比、纵轴是调用深度，要看哪条栈最宽而不是最深的那一帧",
+        "ftrace 走 tracefs：function_graph 记录函数进出与耗时，tracepoint 与 kprobe 可自选打点位置；它会改变时序，适合定位而不是压测",
+        "eBPF 用 bpftrace 挂 kprobe 或 uprobe 在内核里就地聚合，hist 直接出延迟分布，不必把每条记录搬到用户态"
+      ],
+      "use": "驱动 probe 慢、中断延迟高、内存拷贝耗时、收包丢包这类问题的定位；线上用 bpftrace 统计分布，本地用 perf 出火焰图。",
+      "trap": "在中断上下文里挂长时间追踪，会把原来的延迟问题放大成另一个问题，测出来的数不是你测的对象——先确认工具自身开销量级（perf 采样约百分之几，function_graph 可能翻倍）再下结论。"
+    }
+  ]
+}
